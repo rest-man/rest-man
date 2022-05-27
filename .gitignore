@@ -7,3 +7,5 @@
 /rdoc
 /.yardoc
 /tmp
+.byebug_history
+.ruby-version
