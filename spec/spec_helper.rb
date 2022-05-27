@@ -2,6 +2,7 @@ require 'webmock/rspec'
 require 'rest-client'
 
 require_relative './helpers'
+require 'byebug'
 
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|
@@ -19,6 +20,8 @@ RSpec.configure do |config|
 
   # add helpers
   config.include Helpers, :include_helpers
+
+  config.filter_run_when_matching :focus
 
   config.mock_with :rspec do |mocks|
     mocks.yield_receiver_to_any_instance_implementation_blocks = true
