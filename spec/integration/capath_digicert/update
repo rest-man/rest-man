@@ -1,0 +1,1 @@
+for file in *.crt; do ln -s "$file" "$(openssl x509 -hash -noout -in "$file")".0; done
