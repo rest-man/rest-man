@@ -1,0 +1,44 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://httpbin.org/deflate
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      User-Agent:
+      - rest-client/2.1.0 (darwin21 arm64) ruby/2.7.6p219
+      Accept-Encoding:
+      - gzip, deflate
+      Host:
+      - httpbin.org
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 30 May 2022 12:41:31 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '235'
+      Connection:
+      - keep-alive
+      Server:
+      - gunicorn/19.9.0
+      Content-Encoding:
+      - deflate
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Credentials:
+      - 'true'
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        eJw9j01rwyAcxu/5FOJpLdVGTQwZ9JBD2XYdHeyq8d9EaDQYy1hLv/tMOnJ8fs8LPPcMIWzgfFERDH5FMVxhh2bYgzIQpsTuSSbQtC2MMWm83W/xElopObrWG+u62e5udtyh/9E1+O6npdzHOGrrqA/d6n1NEEjTgVsSAaZI2otNcs8pozl6MSr8WMcZUmGQxQaFq/5NXkXlyFm97nyTZrg5cgqqBfIx/8Gf3scDI5LXhdaVJvJsZF5zw5koBQghqqLgnBmcFh7P5wPE3i/lt+PpuY19sJ11M2NlTWVJWS4p5yXOHtkfO+dVfg==
+  recorded_at: Mon, 30 May 2022 12:41:31 GMT
+recorded_with: VCR 6.1.0

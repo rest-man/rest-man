@@ -1,0 +1,44 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://httpbin.org/gzip
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      User-Agent:
+      - rest-client/2.1.0 (darwin21 arm64) ruby/2.7.6p219
+      Accept-Encoding:
+      - gzip, deflate
+      Host:
+      - httpbin.org
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 30 May 2022 12:41:30 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '247'
+      Connection:
+      - keep-alive
+      Server:
+      - gunicorn/19.9.0
+      Content-Encoding:
+      - gzip
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Credentials:
+      - 'true'
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAHq7lGIC/z2PTWvDIBzG7/kU4qkr1UZpTDPYIYey7To62NXoXyM0GoxlrKXffSaFHJ/f8wLPvUAI25sbR9D4FaV4hR2aWQ9SQ5wyu2eZQasUjClrvN1v8RJaKTl5FbTzdrbntR3SYC4ywRr8CNNS7lMaO+dpiHb1vieIpLXgl0SEKRF1cVnuOWW0RBst46/znCEZB3F4QfHa/WWvpmLkrFl3fkg73Dw5R6mAfM5/8FcI6Y0RwZtD19WS1EbpWpdHXinFTGWEFqCOxuC88Hg+HyD1YSm/n87PbRyis87PjFUNFRVlpaCcV7h4FP+n2WKuQwEAAA==
+  recorded_at: Mon, 30 May 2022 12:41:30 GMT
+recorded_with: VCR 6.1.0

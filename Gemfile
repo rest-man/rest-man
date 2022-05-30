@@ -6,7 +6,8 @@ else
   gemspec :name => 'rest-client'
 end
 
-group :test do
+group :development, :test do
+  gem 'vcr'
   gem 'rake'
   gem 'byebug'
 end

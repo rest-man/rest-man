@@ -1,0 +1,49 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://httpbin.org/cookies/set?foo=bar
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      User-Agent:
+      - rest-client/2.1.0 (darwin21 arm64) ruby/2.7.6p219
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Host:
+      - httpbin.org
+  response:
+    status:
+      code: 302
+      message: FOUND
+    headers:
+      Date:
+      - Mon, 30 May 2022 12:34:45 GMT
+      Content-Type:
+      - text/html; charset=utf-8
+      Content-Length:
+      - '223'
+      Connection:
+      - keep-alive
+      Server:
+      - gunicorn/19.9.0
+      Location:
+      - "/cookies"
+      Set-Cookie:
+      - foo=bar; Path=/
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Credentials:
+      - 'true'
+    body:
+      encoding: UTF-8
+      string: |-
+        <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+        <title>Redirecting...</title>
+        <h1>Redirecting...</h1>
+        <p>You should be redirected automatically to target URL: <a href="/cookies">/cookies</a>.  If not click the link.
+  recorded_at: Mon, 30 May 2022 12:34:45 GMT
+recorded_with: VCR 6.1.0

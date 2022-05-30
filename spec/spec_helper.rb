@@ -3,6 +3,13 @@ require 'rest-client'
 
 require_relative './helpers'
 require 'byebug'
+require 'vcr'
+
+VCR.configure do |config|
+  config.default_cassette_options = { match_requests_on: %i[uri method] }
+  config.cassette_library_dir = 'spec/cassettes'
+  config.hook_into :webmock
+end
 
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|
