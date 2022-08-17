@@ -1,10 +1,10 @@
-module RestClient
-  # The response from RestClient on a raw request looks like a string, but is
+module SimpleRestClient
+  # The response from SimpleRestClient on a raw request looks like a string, but is
   # actually one of these.  99% of the time you're making a rest call all you
   # care about is the body, but on the occasion you want to fetch the
   # headers you can:
   #
-  #   RestClient.get('http://example.com').headers[:content_type]
+  #   SimpleRestClient.get('http://example.com').headers[:content_type]
   #
   # In addition, if you do not use the response as a string, you can access
   # a Tempfile object at res.file, which contains the path to the raw
@@ -16,12 +16,12 @@ module RestClient
     attr_reader :file, :request, :start_time, :end_time
 
     def inspect
-      "<RestClient::RawResponse @code=#{code.inspect}, @file=#{file.inspect}, @request=#{request.inspect}>"
+      "<SimpleRestClient::RawResponse @code=#{code.inspect}, @file=#{file.inspect}, @request=#{request.inspect}>"
     end
 
     # @param [Tempfile] tempfile The temporary file containing the body
     # @param [Net::HTTPResponse] net_http_res
-    # @param [RestClient::Request] request
+    # @param [SimpleRestClient::Request] request
     # @param [Time] start_time
     def initialize(tempfile, net_http_res, request, start_time=nil)
       @file = tempfile

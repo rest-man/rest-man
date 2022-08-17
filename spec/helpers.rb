@@ -11,18 +11,18 @@ module Helpers
   end
 
   # Given a Net::HTTPResponse or double and a Request or double, create a
-  # RestClient::Response object.
+  # SimpleRestClient::Response object.
   #
   # @param net_http_res_double an rspec double for Net::HTTPResponse
-  # @param request A RestClient::Request or rspec double
+  # @param request A SimpleRestClient::Request or rspec double
   #
-  # @return [RestClient::Response]
+  # @return [SimpleRestClient::Response]
   #
   def response_from_res_double(net_http_res_double, request=nil, duration: 1)
     request ||= request_double()
     start_time = Time.now - duration
 
-    response = RestClient::Response.create(net_http_res_double.body, net_http_res_double, request, start_time)
+    response = SimpleRestClient::Response.create(net_http_res_double.body, net_http_res_double, request, start_time)
 
     # mock duration to ensure it gets the value we expect
     allow(response).to receive(:duration).and_return(duration)
@@ -40,9 +40,9 @@ module Helpers
     $stderr = original_stderr
   end
 
-  # Create a double for RestClient::Request
+  # Create a double for SimpleRestClient::Request
   def request_double(url: 'http://example.com', method: 'get')
-    instance_double('RestClient::Request',
+    instance_double('SimpleRestClient::Request',
       url: url, uri: URI.parse(url), method: method, user: nil, password: nil,
       cookie_jar: HTTP::CookieJar.new, redirection_history: nil,
       args: {url: url, method: method})

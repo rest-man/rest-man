@@ -19,15 +19,15 @@ Lint/UnusedBlockArgument:
 
 Security/Eval:
   Exclude:
-  - rest-client.windows.gemspec
+  - simple-rest-client.windows.gemspec
 
 Lint/HandleExceptions:
   Exclude:
-  - lib/restclient/utils.rb
+  - lib/simplerestclient/utils.rb
 
 Lint/UselessAccessModifier:
   Exclude:
-  - lib/restclient/windows/root_certs.rb
+  - lib/simplerestclient/windows/root_certs.rb
 
 # Offense count: 4
 # Cop supports --auto-correct.
@@ -55,7 +55,7 @@ Style/BracesAroundHashParameters:
 # Offense count: 1
 Naming/ClassAndModuleCamelCase:
   Exclude:
-    - lib/restclient/windows/root_certs.rb
+    - lib/simplerestclient/windows/root_certs.rb
 
 # Offense count: 2
 # Configuration parameters: EnforcedStyle, SupportedStyles.
@@ -165,7 +165,7 @@ Style/Encoding:
 
 Naming/FileName:
   Exclude:
-    - lib/rest-client.rb
+    - lib/simple-rest-client.rb
 
 # Offense count: 3
 # Configuration parameters: EnforcedStyle, SupportedStyles.
@@ -254,7 +254,7 @@ Style/PercentLiteralDelimiters:
     '%W': '{}'
     '%Q': '{}'
   Exclude:
-    - 'bin/restclient'
+    - 'bin/simplerestclient'
 
 # Offense count: 3
 # Configuration parameters: NamePrefixBlacklist.
@@ -282,7 +282,7 @@ Style/RedundantSelf:
 Style/RescueModifier:
   Enabled: false
   Exclude:
-    - 'bin/restclient'
+    - 'bin/simplerestclient'
 
 # TODO: configure
 # Offense count: 12
@@ -354,7 +354,7 @@ Style/TrailingCommaInArguments:
 # Configuration parameters: ExactNameMatch, AllowPredicates, AllowDSLWriters, Whitelist.
 Style/TrivialAccessors:
   Enabled: false
-  Exclude: ['lib/restclient/payload.rb']
+  Exclude: ['lib/simplerestclient/payload.rb']
 
 # TODO?
 # Offense count: 3
@@ -382,5 +382,5 @@ Style/BarePercentLiterals:
 
 Style/RescueStandardError:
   Exclude:
-    - 'bin/restclient'
-    - 'lib/restclient/windows/root_certs.rb'
+    - 'bin/simplerestclient'
+    - 'lib/simplerestclient/windows/root_certs.rb'

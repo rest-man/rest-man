@@ -3,12 +3,12 @@
 $LOAD_PATH.unshift File.dirname(__FILE__) + "/../lib"
 
 require 'rubygems'
-require 'restclient'
+require 'simplerestclient'
 require 'yaml'
 
 def usage(why = nil)
   puts "failed for reason: #{why}" if why
-  puts "usage: restclient [get|put|post|delete] url|name [username] [password]"
+  puts "usage: simplerestclient [get|put|post|delete] url|name [username] [password]"
   puts "  The verb is optional, if you leave it off you'll get an interactive shell."
   puts "  put and post both take the input body on stdin."
   exit(1)
@@ -24,7 +24,7 @@ end
 
 @url = ARGV.shift || 'http://localhost:4567'
 
-config = YAML.load(File.read(ENV['HOME'] + "/.restclient")) rescue {}
+config = YAML.load(File.read(ENV['HOME'] + "/.simplerestclient")) rescue {}
 
 if (c = config[@url])
   @url, @username, @password = [c['url'], c['username'], c['password']]
@@ -36,7 +36,7 @@ usage("invalid url '#{@url}") unless @url =~ /^https?/
 usage("too few args") unless ARGV.size < 3
 
 def r
-  @r ||= RestClient::Resource.new(@url, @username, @password)
+  @r ||= SimpleRestClient::Resource.new(@url, @username, @password)
 end
 
 r # force rc to load
@@ -49,7 +49,7 @@ if @verb
       puts r.send(@verb)
     end
     exit 0
-  rescue RestClient::Exception => e
+  rescue SimpleRestClient::Exception => e
     puts e.response.body if e.respond_to?(:response) && e.response
     raise
   end
@@ -65,7 +65,7 @@ def method_missing(s, * args, & b)
   if POSSIBLE_VERBS.include? s
     begin
       r.send(s, *args, & b)
-    rescue RestClient::RequestFailed => e
+    rescue SimpleRestClient::RequestFailed => e
       print STDERR, e.response.body
       raise e
     end
@@ -81,7 +81,7 @@ if File.exist? ".irbrc"
   ENV['IRBRC'] = ".irbrc"
 end
 
-rcfile = File.expand_path("~/.restclientrc")
+rcfile = File.expand_path("~/.simplerestclientrc")
 if File.exist?(rcfile)
   load(rcfile)
 end
