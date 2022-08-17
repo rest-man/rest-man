@@ -3,6 +3,8 @@
 A simple HTTP and REST client for Ruby, inspired by the Sinatra's microframework style
 of specifying actions: get, put, post, delete.
 
+This is a fork version of [rest-client](https://github.com/rest-client/rest-client)
+
 ## Requirements
 
 MRI Ruby 2.0 and newer are supported. Alternative interpreters compatible with
