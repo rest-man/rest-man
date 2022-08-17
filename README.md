@@ -407,7 +407,7 @@ with a `read` method.
 ```
 
 In Multipart requests, SimpleRestClient will also stream file handles passed as Hash
-(or __new in 2.1__ ParamsArray).
+(or ParamsArray).
 
 ```ruby
 >> r = SimpleRestClient.put('http://httpbin.org/put',
@@ -444,7 +444,7 @@ Note that the tempfile created by `Tempfile.new` will be in `Dir.tmpdir`
 different location. This file will be unlinked when it is dereferenced.
 
 If logging is enabled, this will also print download progress.
-__New in 2.1:__ Customize the interval with `:stream_log_percent` (defaults to
+Customize the interval with `:stream_log_percent` (defaults to
 10 for printing a message every 10% complete).
 
 For example:
