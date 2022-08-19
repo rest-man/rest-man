@@ -235,10 +235,4 @@ module SimpleRestClient
     end
   end
 
-  class SSLCertificateNotVerified < SimpleRestClient::Exception
-    def initialize(message = 'SSL certificate not verified')
-      super nil, nil
-      self.message = message
-    end
-  end
 end

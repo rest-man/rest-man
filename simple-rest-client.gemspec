@@ -9,10 +9,12 @@ Gem::Specification.new do |s|
   s.description = 'A simple HTTP and REST client for Ruby, inspired by the Sinatra microframework style of specifying actions: get, put, post, delete.'
   s.license = 'MIT'
   s.email = 'hopper.gee@hey.com'
-  s.executables = ['simplerestclient']
   s.extra_rdoc_files = ['README.md', 'CHANGELOG.md']
   s.files = `git ls-files -z`.split("\0")
   s.test_files = `git ls-files -z spec/`.split("\0")
+  s.bindir = "exe"
+  s.executables = ['simplerestclient']
+
   s.homepage = 'https://github.com/simple-rest-client/simple-rest-client'
   s.summary = 'Simple HTTP and REST client for Ruby, inspired by microframework syntax for specifying actions.'
 
@@ -29,4 +31,11 @@ Gem::Specification.new do |s|
   s.add_dependency('netrc', '~> 0.8')
 
   s.required_ruby_version = '>= 2.0.0'
+
+  case ENV['BUILD_PLATFORM'] || RUBY_PLATFORM
+  when /(mingw32|mswin32)/
+    # ffi is needed for SimpleRestClient::Windows::RootCerts
+    s.add_dependency('ffi', '~> 1.9')
+    s.platform = platform
+  end
 end

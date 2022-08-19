@@ -756,27 +756,6 @@ module SimpleRestClient
       else
         raise SimpleRestClient::Exceptions::OpenTimeout.new(nil, err)
       end
-
-    rescue OpenSSL::SSL::SSLError => error
-      # TODO: deprecate and remove SimpleRestClient::SSLCertificateNotVerified and just
-      # pass through OpenSSL::SSL::SSLError directly.
-      #
-      # Exceptions in verify_callback are ignored [1], and jruby doesn't support
-      # it at all [2]. SimpleRestClient has to catch OpenSSL::SSL::SSLError and either
-      # re-throw it as is, or throw SSLCertificateNotVerified based on the
-      # contents of the message field of the original exception.
-      #
-      # The client has to handle OpenSSL::SSL::SSLError exceptions anyway, so
-      # we shouldn't make them handle both OpenSSL and SimpleRestClient exceptions.
-      #
-      # [1] https://github.com/ruby/ruby/blob/89e70fe8e7/ext/openssl/ossl.c#L238
-      # [2] https://github.com/jruby/jruby/issues/597
-
-      if error.message.include?("certificate verify failed")
-        raise SSLCertificateNotVerified.new(error.message)
-      else
-        raise error
-      end
     end
 
     def setup_credentials(req)

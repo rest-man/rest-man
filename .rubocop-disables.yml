@@ -254,7 +254,7 @@ Style/PercentLiteralDelimiters:
     '%W': '{}'
     '%Q': '{}'
   Exclude:
-    - 'bin/simplerestclient'
+    - 'exe/simplerestclient'
 
 # Offense count: 3
 # Configuration parameters: NamePrefixBlacklist.
@@ -282,7 +282,7 @@ Style/RedundantSelf:
 Style/RescueModifier:
   Enabled: false
   Exclude:
-    - 'bin/simplerestclient'
+    - 'exe/simplerestclient'
 
 # TODO: configure
 # Offense count: 12
@@ -382,5 +382,5 @@ Style/BarePercentLiterals:
 
 Style/RescueStandardError:
   Exclude:
-    - 'bin/simplerestclient'
+    - 'exe/simplerestclient'
     - 'lib/simplerestclient/windows/root_certs.rb'

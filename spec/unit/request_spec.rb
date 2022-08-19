@@ -393,7 +393,6 @@ describe SimpleRestClient::Request, :include_helpers do
     it "sends nil payloads" do
       expect(@http).to receive(:request).with('req', nil)
       expect(@request).to receive(:process_result)
-      allow(@request).to receive(:response_log)
       @request.send(:transmit, @uri, 'req', nil)
     end
 
@@ -423,7 +422,6 @@ describe SimpleRestClient::Request, :include_helpers do
       allow(@http).to receive(:request)
 
       allow(@request).to receive(:process_result)
-      allow(@request).to receive(:response_log)
 
       allow(@request).to receive(:user).and_return('joe')
       allow(@request).to receive(:password).and_return('mypass')
@@ -696,7 +694,6 @@ describe SimpleRestClient::Request, :include_helpers do
       @request = SimpleRestClient::Request.new(:method => :put, :url => 'http://some/resource', :payload => 'payload')
       allow(@http).to receive(:request)
       allow(@request).to receive(:process_result)
-      allow(@request).to receive(:response_log)
 
       expect(@net).not_to receive(:read_timeout=)
       expect(@net).not_to receive(:open_timeout=)
@@ -708,7 +705,6 @@ describe SimpleRestClient::Request, :include_helpers do
       @request = SimpleRestClient::Request.new(:method => :put, :url => 'http://some/resource', :payload => 'payload', :read_timeout => 123)
       allow(@http).to receive(:request)
       allow(@request).to receive(:process_result)
-      allow(@request).to receive(:response_log)
 
       expect(@net).to receive(:read_timeout=).with(123)
 
@@ -719,7 +715,6 @@ describe SimpleRestClient::Request, :include_helpers do
       @request = SimpleRestClient::Request.new(:method => :put, :url => 'http://some/resource', :payload => 'payload', :open_timeout => 123)
       allow(@http).to receive(:request)
       allow(@request).to receive(:process_result)
-      allow(@request).to receive(:response_log)
 
       expect(@net).to receive(:open_timeout=).with(123)
 
@@ -730,7 +725,6 @@ describe SimpleRestClient::Request, :include_helpers do
       @request = SimpleRestClient::Request.new(:method => :put, :url => 'http://some/resource', :payload => 'payload', :timeout => 123)
       allow(@http).to receive(:request)
       allow(@request).to receive(:process_result)
-      allow(@request).to receive(:response_log)
 
       expect(@net).to receive(:open_timeout=).with(123)
       expect(@net).to receive(:read_timeout=).with(123)
@@ -742,7 +736,6 @@ describe SimpleRestClient::Request, :include_helpers do
       @request = SimpleRestClient::Request.new(:method => :put, :url => 'http://some/resource', :payload => 'payload', :timeout => 123, :open_timeout => 34, :read_timeout => 56)
       allow(@http).to receive(:request)
       allow(@request).to receive(:process_result)
-      allow(@request).to receive(:response_log)
 
       expect(@net).to receive(:open_timeout=).with(34)
       expect(@net).to receive(:read_timeout=).with(56)
@@ -755,7 +748,6 @@ describe SimpleRestClient::Request, :include_helpers do
       @request = SimpleRestClient::Request.new(:method => :put, :url => 'http://some/resource', :payload => 'payload', :read_timeout => nil, :open_timeout => nil)
       allow(@http).to receive(:request)
       allow(@request).to receive(:process_result)
-      allow(@request).to receive(:response_log)
 
       expect(@net).to receive(:read_timeout=).with(nil)
       expect(@net).to receive(:open_timeout=).with(nil)
@@ -767,7 +759,6 @@ describe SimpleRestClient::Request, :include_helpers do
       @request = SimpleRestClient::Request.new(:method => :put, :url => 'http://some/resource', :payload => 'payload', :read_timeout => -1)
       allow(@http).to receive(:request)
       allow(@request).to receive(:process_result)
-      allow(@request).to receive(:response_log)
 
       expect(@net).to receive(:read_timeout=).with(nil)
 
@@ -780,7 +771,6 @@ describe SimpleRestClient::Request, :include_helpers do
       @request = SimpleRestClient::Request.new(:method => :put, :url => 'http://some/resource', :payload => 'payload', :read_timeout => -1, :open_timeout => -1)
       allow(@http).to receive(:request)
       allow(@request).to receive(:process_result)
-      allow(@request).to receive(:response_log)
 
       expect(@request).to receive(:warn)
       expect(@net).to receive(:read_timeout=).with(nil)
@@ -798,7 +788,6 @@ describe SimpleRestClient::Request, :include_helpers do
       expect(@net).to receive(:use_ssl=).with(true)
       allow(@http).to receive(:request)
       allow(@request).to receive(:process_result)
-      allow(@request).to receive(:response_log)
       @request.send(:transmit, @uri, 'req', 'payload')
     end
 
@@ -816,7 +805,6 @@ describe SimpleRestClient::Request, :include_helpers do
       expect(@net).to receive(:verify_mode=).with(OpenSSL::SSL::VERIFY_NONE)
       allow(@http).to receive(:request)
       allow(@request).to receive(:process_result)
-      allow(@request).to receive(:response_log)
       @request.send(:transmit, @uri, 'req', 'payload')
     end
 
@@ -825,7 +813,6 @@ describe SimpleRestClient::Request, :include_helpers do
       expect(@net).not_to receive(:verify_mode=).with(OpenSSL::SSL::VERIFY_NONE)
       allow(@http).to receive(:request)
       allow(@request).to receive(:process_result)
-      allow(@request).to receive(:response_log)
       @request.send(:transmit, @uri, 'req', 'payload')
     end
 
@@ -834,7 +821,6 @@ describe SimpleRestClient::Request, :include_helpers do
       expect(@net).to receive(:verify_mode=).with(OpenSSL::SSL::VERIFY_PEER)
       allow(@http).to receive(:request)
       allow(@request).to receive(:process_result)
-      allow(@request).to receive(:response_log)
       @request.send(:transmit, @uri, 'req', 'payload')
     end
 
@@ -843,7 +829,6 @@ describe SimpleRestClient::Request, :include_helpers do
       expect(@net).to receive(:verify_mode=).with(OpenSSL::SSL::VERIFY_PEER)
       allow(@http).to receive(:request)
       allow(@request).to receive(:process_result)
-      allow(@request).to receive(:response_log)
       @request.send(:transmit, @uri, 'req', 'payload')
     end
 
@@ -856,7 +841,6 @@ describe SimpleRestClient::Request, :include_helpers do
       expect(@net).to receive(:verify_mode=).with(mode)
       allow(@http).to receive(:request)
       allow(@request).to receive(:process_result)
-      allow(@request).to receive(:response_log)
       @request.send(:transmit, @uri, 'req', 'payload')
     end
 
@@ -874,7 +858,6 @@ describe SimpleRestClient::Request, :include_helpers do
       expect(@net).to receive(:ssl_version=).with("TLSv1")
       allow(@http).to receive(:request)
       allow(@request).to receive(:process_result)
-      allow(@request).to receive(:response_log)
       @request.send(:transmit, @uri, 'req', 'payload')
     end
 
@@ -887,7 +870,6 @@ describe SimpleRestClient::Request, :include_helpers do
       expect(@net).not_to receive(:ssl_version=).with("TLSv1")
       allow(@http).to receive(:request)
       allow(@request).to receive(:process_result)
-      allow(@request).to receive(:response_log)
       @request.send(:transmit, @uri, 'req', 'payload')
     end
 
@@ -902,7 +884,6 @@ describe SimpleRestClient::Request, :include_helpers do
       expect(@net).to receive(:ciphers=).with(ciphers)
       allow(@http).to receive(:request)
       allow(@request).to receive(:process_result)
-      allow(@request).to receive(:response_log)
       @request.send(:transmit, @uri, 'req', 'payload')
     end
 
@@ -916,7 +897,6 @@ describe SimpleRestClient::Request, :include_helpers do
       expect(@net).not_to receive(:ciphers=)
       allow(@http).to receive(:request)
       allow(@request).to receive(:process_result)
-      allow(@request).to receive(:response_log)
       @request.send(:transmit, @uri, 'req', 'payload')
     end
 
@@ -930,7 +910,6 @@ describe SimpleRestClient::Request, :include_helpers do
       expect(@net).to receive(:cert=).with("whatsupdoc!")
       allow(@http).to receive(:request)
       allow(@request).to receive(:process_result)
-      allow(@request).to receive(:response_log)
       @request.send(:transmit, @uri, 'req', 'payload')
     end
 
@@ -943,7 +922,6 @@ describe SimpleRestClient::Request, :include_helpers do
       expect(@net).not_to receive(:cert=)
       allow(@http).to receive(:request)
       allow(@request).to receive(:process_result)
-      allow(@request).to receive(:response_log)
       @request.send(:transmit, @uri, 'req', 'payload')
     end
 
@@ -961,7 +939,6 @@ describe SimpleRestClient::Request, :include_helpers do
       expect(@net).to receive(:key=).with("whatsupdoc!")
       allow(@http).to receive(:request)
       allow(@request).to receive(:process_result)
-      allow(@request).to receive(:response_log)
       @request.send(:transmit, @uri, 'req', 'payload')
     end
 
@@ -974,7 +951,6 @@ describe SimpleRestClient::Request, :include_helpers do
       expect(@net).not_to receive(:key=)
       allow(@http).to receive(:request)
       allow(@request).to receive(:process_result)
-      allow(@request).to receive(:response_log)
       @request.send(:transmit, @uri, 'req', 'payload')
     end
 
@@ -993,7 +969,6 @@ describe SimpleRestClient::Request, :include_helpers do
       expect(@net).not_to receive(:cert_store=)
       allow(@http).to receive(:request)
       allow(@request).to receive(:process_result)
-      allow(@request).to receive(:response_log)
       @request.send(:transmit, @uri, 'req', 'payload')
     end
 
@@ -1006,7 +981,6 @@ describe SimpleRestClient::Request, :include_helpers do
       expect(@net).not_to receive(:ca_file=)
       allow(@http).to receive(:request)
       allow(@request).to receive(:process_result)
-      allow(@request).to receive(:response_log)
       @request.send(:transmit, @uri, 'req', 'payload')
     end
 
@@ -1025,7 +999,6 @@ describe SimpleRestClient::Request, :include_helpers do
       expect(@net).not_to receive(:cert_store=)
       allow(@http).to receive(:request)
       allow(@request).to receive(:process_result)
-      allow(@request).to receive(:response_log)
       @request.send(:transmit, @uri, 'req', 'payload')
     end
 
@@ -1038,7 +1011,6 @@ describe SimpleRestClient::Request, :include_helpers do
       expect(@net).not_to receive(:ca_path=)
       allow(@http).to receive(:request)
       allow(@request).to receive(:process_result)
-      allow(@request).to receive(:response_log)
       @request.send(:transmit, @uri, 'req', 'payload')
     end
 
@@ -1057,7 +1029,6 @@ describe SimpleRestClient::Request, :include_helpers do
       expect(@net).not_to receive(:ca_file=)
       allow(@http).to receive(:request)
       allow(@request).to receive(:process_result)
-      allow(@request).to receive(:response_log)
       @request.send(:transmit, @uri, 'req', 'payload')
     end
 
@@ -1072,7 +1043,6 @@ describe SimpleRestClient::Request, :include_helpers do
       expect(@net).not_to receive(:ca_file=)
       allow(@http).to receive(:request)
       allow(@request).to receive(:process_result)
-      allow(@request).to receive(:response_log)
       @request.send(:transmit, @uri, 'req', 'payload')
     end
 
@@ -1086,7 +1056,6 @@ describe SimpleRestClient::Request, :include_helpers do
       expect(@net).not_to receive(:cert_store=)
       allow(@http).to receive(:request)
       allow(@request).to receive(:process_result)
-      allow(@request).to receive(:response_log)
       @request.send(:transmit, @uri, 'req', 'payload')
     end
 
@@ -1099,7 +1068,6 @@ describe SimpleRestClient::Request, :include_helpers do
       expect(@net).not_to receive(:verify_callback=)
       allow(@http).to receive(:request)
       allow(@request).to receive(:process_result)
-      allow(@request).to receive(:response_log)
       @request.send(:transmit, @uri, 'req', 'payload')
     end
 
@@ -1121,7 +1089,6 @@ describe SimpleRestClient::Request, :include_helpers do
 
       allow(@http).to receive(:request)
       allow(@request).to receive(:process_result)
-      allow(@request).to receive(:response_log)
       @request.send(:transmit, @uri, 'req', 'payload')
     end
 
