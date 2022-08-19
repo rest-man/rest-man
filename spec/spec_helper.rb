@@ -2,7 +2,8 @@ require 'webmock/rspec'
 require 'simple-rest-client'
 
 require_relative './helpers'
-require 'byebug'
+require 'byebug' unless RUBY_PLATFORM == 'java'
+require 'ruby-debug' if RUBY_PLATFORM == 'java'
 require 'vcr'
 
 VCR.configure do |config|

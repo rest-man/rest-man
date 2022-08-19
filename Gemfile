@@ -1,13 +1,11 @@
 source "https://rubygems.org"
 
-if !!File::ALT_SEPARATOR
-  gemspec :name => 'simple-rest-client.windows'
-else
-  gemspec :name => 'simple-rest-client'
-end
+gemspec
 
 group :development, :test do
+  gem 'matrixeval-ruby'
   gem 'vcr'
   gem 'rake'
-  gem 'byebug'
+  gem 'byebug' unless RUBY_PLATFORM == 'java'
+  gem 'ruby-debug' if RUBY_PLATFORM == 'java'
 end

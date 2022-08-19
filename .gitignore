@@ -9,3 +9,5 @@
 /tmp
 .byebug_history
 .ruby-version
+.matrixeval/docker-compose
+.matrixeval/gemfile_locks
