@@ -27,7 +27,7 @@ matrix:
           image: hoppergee/jruby:9.3.7-dev
         env:
             PATH: "/opt/jruby/bin:/app/bin:/bundle/bin:$PATH"
-            JRUBY_OPTS: "--dev -X-C"
+            JRUBY_OPTS: "--dev -X-C --debug"
             JAVA_OPTS: "-client -XX:+TieredCompilation -XX:TieredStopAtLevel=1"
       #   mounts:
       #     - /a/path/need/to/mount:/a/path/mount/to

@@ -1,0 +1,27 @@
+name: Single Matrix Test
+
+on:
+  workflow_dispatch:
+    inputs:
+      ruby_version:
+        required: true
+        type: choice
+        options:
+        - ruby-2.7
+        - ruby-3.0
+        - ruby-3.1
+        - jruby-9.3.7
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{ inputs.ruby_version }}
+        bundler-cache: true
+    - name: Run all tests with RSpec 
+      run: bundle exec rspec
