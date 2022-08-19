@@ -10,7 +10,7 @@ http_interactions:
       Accept:
       - "*/*"
       User-Agent:
-      - simple-rest-client/1.0.0 (darwin21 arm64) ruby/2.7.6p219
+      - rest-man/1.0.0 (darwin21 arm64) ruby/2.7.6p219
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Host:
@@ -38,7 +38,7 @@ http_interactions:
       encoding: ASCII-8BIT
       string: "{\n  \"gzipped\": true, \n  \"headers\": {\n    \"Accept\": \"*/*\",
         \n    \"Accept-Encoding\": \"gzip;q=1.0,deflate;q=0.6,identity;q=0.3\", \n
-        \   \"Host\": \"httpbin.org\", \n    \"User-Agent\": \"simple-rest-client/1.0.0 (darwin21
+        \   \"Host\": \"httpbin.org\", \n    \"User-Agent\": \"rest-man/1.0.0 (darwin21
         arm64) ruby/2.7.6p219\", \n    \"X-Amzn-Trace-Id\": \"Root=1-6294b93e-6f0917d64ba80b424308f280\"\n
         \ }, \n  \"method\": \"GET\", \n  \"origin\": \"159.65.106.225\"\n}\n"
   recorded_at: Mon, 30 May 2022 12:31:58 GMT

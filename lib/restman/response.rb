@@ -1,6 +1,6 @@
-module SimpleRestClient
+module RestMan
 
-  # A Response from SimpleRestClient, you can access the response body, the code or the headers.
+  # A Response from RestMan, you can access the response body, the code or the headers.
   #
   class Response < String
 
@@ -8,7 +8,7 @@ module SimpleRestClient
 
     # Return the HTTP response body.
     #
-    # Future versions of SimpleRestClient will deprecate treating response objects
+    # Future versions of RestMan will deprecate treating response objects
     # directly as strings, so it will be necessary to call `.body`.
     #
     # @return [String]
@@ -35,16 +35,16 @@ module SimpleRestClient
     end
 
     def inspect
-      "<SimpleRestClient::Response #{code.inspect} #{body_truncated(10).inspect}>"
+      "<RestMan::Response #{code.inspect} #{body_truncated(10).inspect}>"
     end
 
-    # Initialize a Response object. Because SimpleRestClient::Response is
+    # Initialize a Response object. Because RestMan::Response is
     # (unfortunately) a subclass of String for historical reasons,
     # Response.create is the preferred initializer.
     #
     # @param [String, nil] body The response body from the Net::HTTPResponse
     # @param [Net::HTTPResponse] net_http_res
-    # @param [SimpleRestClient::Request] request
+    # @param [RestMan::Request] request
     # @param [Time] start_time
     def self.create(body, net_http_res, request, start_time=nil)
       result = self.new(body || '')
@@ -58,7 +58,7 @@ module SimpleRestClient
     # Set the String encoding according to the 'Content-Type: charset' header,
     # if possible.
     def self.fix_encoding(response)
-      charset = SimpleRestClient::Utils.get_encoding_from_headers(response.headers)
+      charset = RestMan::Utils.get_encoding_from_headers(response.headers)
       encoding = nil
 
       begin

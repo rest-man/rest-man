@@ -1,7 +1,7 @@
 require 'cgi'
 require 'http-cookie'
 
-module SimpleRestClient
+module RestMan
 
   module AbstractResponse
 
@@ -47,7 +47,7 @@ module SimpleRestClient
     end
 
     # @param [Net::HTTPResponse] net_http_res
-    # @param [SimpleRestClient::Request] request
+    # @param [RestMan::Request] request
     # @param [Time] start_time
     def response_set_vars(net_http_res, request, start_time)
       @net_http_res = net_http_res

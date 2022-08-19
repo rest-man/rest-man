@@ -1,4 +1,4 @@
-module SimpleRestClient
+module RestMan
 
   # The ParamsArray class is used to represent an ordered list of [key, value]
   # pairs. Use this when you need to include a key multiple times or want
@@ -7,8 +7,8 @@ module SimpleRestClient
   # Most of the request payload & parameter functions normally accept a Hash of
   # keys => values, which does not allow for duplicated keys.
   #
-  # @see SimpleRestClient::Utils.encode_query_string
-  # @see SimpleRestClient::Utils.flatten_params
+  # @see RestMan::Utils.encode_query_string
+  # @see RestMan::Utils.flatten_params
   #
   class ParamsArray
     include Enumerable

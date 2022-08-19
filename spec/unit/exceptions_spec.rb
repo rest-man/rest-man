@@ -1,36 +1,36 @@
 require_relative '_lib'
 
-describe SimpleRestClient::Exception do
+describe RestMan::Exception do
   it "returns a 'message' equal to the class name if the message is not set, because 'message' should not be nil" do
-    e = SimpleRestClient::Exception.new
-    expect(e.message).to eq "SimpleRestClient::Exception"
+    e = RestMan::Exception.new
+    expect(e.message).to eq "RestMan::Exception"
   end
 
   it "returns the 'message' that was set" do
-    e = SimpleRestClient::Exception.new
+    e = RestMan::Exception.new
     message = "An explicitly set message"
     e.message = message
     expect(e.message).to eq message
   end
 
   it "sets the exception message to ErrorMessage" do
-    expect(SimpleRestClient::ResourceNotFound.new.message).to eq 'Not Found'
+    expect(RestMan::ResourceNotFound.new.message).to eq 'Not Found'
   end
 
-  it "contains exceptions in SimpleRestClient" do
-    expect(SimpleRestClient::Unauthorized.new).to be_a_kind_of(SimpleRestClient::Exception)
-    expect(SimpleRestClient::ServerBrokeConnection.new).to be_a_kind_of(SimpleRestClient::Exception)
+  it "contains exceptions in RestMan" do
+    expect(RestMan::Unauthorized.new).to be_a_kind_of(RestMan::Exception)
+    expect(RestMan::ServerBrokeConnection.new).to be_a_kind_of(RestMan::Exception)
   end
 end
 
-describe SimpleRestClient::ServerBrokeConnection do
+describe RestMan::ServerBrokeConnection do
   it "should have a default message of 'Server broke connection'" do
-    e = SimpleRestClient::ServerBrokeConnection.new
+    e = RestMan::ServerBrokeConnection.new
     expect(e.message).to eq 'Server broke connection'
   end
 end
 
-describe SimpleRestClient::RequestFailed do
+describe RestMan::RequestFailed do
   before do
     @response = double('HTTP Response', :code => '502')
   end
@@ -38,32 +38,32 @@ describe SimpleRestClient::RequestFailed do
   it "stores the http response on the exception" do
     response = "response"
     begin
-      raise SimpleRestClient::RequestFailed, response
-    rescue SimpleRestClient::RequestFailed => e
+      raise RestMan::RequestFailed, response
+    rescue RestMan::RequestFailed => e
       expect(e.response).to eq response
     end
   end
 
   it "http_code convenience method for fetching the code as an integer" do
-    expect(SimpleRestClient::RequestFailed.new(@response).http_code).to eq 502
+    expect(RestMan::RequestFailed.new(@response).http_code).to eq 502
   end
 
   it "http_body convenience method for fetching the body (decoding when necessary)" do
-    expect(SimpleRestClient::RequestFailed.new(@response).http_code).to eq 502
-    expect(SimpleRestClient::RequestFailed.new(@response).message).to eq 'HTTP status code 502'
+    expect(RestMan::RequestFailed.new(@response).http_code).to eq 502
+    expect(RestMan::RequestFailed.new(@response).message).to eq 'HTTP status code 502'
   end
 
   it "shows the status code in the message" do
-    expect(SimpleRestClient::RequestFailed.new(@response).to_s).to match(/502/)
+    expect(RestMan::RequestFailed.new(@response).to_s).to match(/502/)
   end
 end
 
-describe SimpleRestClient::ResourceNotFound do
+describe RestMan::ResourceNotFound do
   it "also has the http response attached" do
     response = "response"
     begin
-      raise SimpleRestClient::ResourceNotFound, response
-    rescue SimpleRestClient::ResourceNotFound => e
+      raise RestMan::ResourceNotFound, response
+    rescue RestMan::ResourceNotFound => e
       expect(e.response).to eq response
     end
   end
@@ -72,37 +72,37 @@ describe SimpleRestClient::ResourceNotFound do
     body = "body"
     stub_request(:get, "www.example.com").to_return(:body => body, :status => 404)
     begin
-      SimpleRestClient.get "www.example.com"
+      RestMan.get "www.example.com"
       raise
-    rescue SimpleRestClient::ResourceNotFound => e
+    rescue RestMan::ResourceNotFound => e
       expect(e.response.body).to eq body
     end
   end
 end
 
 describe "backwards compatibility" do
-  it 'aliases SimpleRestClient::NotFound as ResourceNotFound' do
-    expect(SimpleRestClient::ResourceNotFound).to eq SimpleRestClient::NotFound
+  it 'aliases RestMan::NotFound as ResourceNotFound' do
+    expect(RestMan::ResourceNotFound).to eq RestMan::NotFound
   end
 
   it 'aliases old names for HTTP 413, 414, 416' do
-    expect(SimpleRestClient::RequestEntityTooLarge).to eq SimpleRestClient::PayloadTooLarge
-    expect(SimpleRestClient::RequestURITooLong).to eq SimpleRestClient::URITooLong
-    expect(SimpleRestClient::RequestedRangeNotSatisfiable).to eq SimpleRestClient::RangeNotSatisfiable
+    expect(RestMan::RequestEntityTooLarge).to eq RestMan::PayloadTooLarge
+    expect(RestMan::RequestURITooLong).to eq RestMan::URITooLong
+    expect(RestMan::RequestedRangeNotSatisfiable).to eq RestMan::RangeNotSatisfiable
   end
 
   it 'subclasses NotFound from RequestFailed, ExceptionWithResponse' do
-    expect(SimpleRestClient::NotFound).to be < SimpleRestClient::RequestFailed
-    expect(SimpleRestClient::NotFound).to be < SimpleRestClient::ExceptionWithResponse
+    expect(RestMan::NotFound).to be < RestMan::RequestFailed
+    expect(RestMan::NotFound).to be < RestMan::ExceptionWithResponse
   end
 
-  it 'subclasses timeout from SimpleRestClient::RequestTimeout, RequestFailed, EWR' do
-    expect(SimpleRestClient::Exceptions::OpenTimeout).to be < SimpleRestClient::Exceptions::Timeout
-    expect(SimpleRestClient::Exceptions::ReadTimeout).to be < SimpleRestClient::Exceptions::Timeout
+  it 'subclasses timeout from RestMan::RequestTimeout, RequestFailed, EWR' do
+    expect(RestMan::Exceptions::OpenTimeout).to be < RestMan::Exceptions::Timeout
+    expect(RestMan::Exceptions::ReadTimeout).to be < RestMan::Exceptions::Timeout
 
-    expect(SimpleRestClient::Exceptions::Timeout).to be < SimpleRestClient::RequestTimeout
-    expect(SimpleRestClient::Exceptions::Timeout).to be < SimpleRestClient::RequestFailed
-    expect(SimpleRestClient::Exceptions::Timeout).to be < SimpleRestClient::ExceptionWithResponse
+    expect(RestMan::Exceptions::Timeout).to be < RestMan::RequestTimeout
+    expect(RestMan::Exceptions::Timeout).to be < RestMan::RequestFailed
+    expect(RestMan::Exceptions::Timeout).to be < RestMan::ExceptionWithResponse
   end
 
 end

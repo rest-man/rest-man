@@ -1,6 +1,6 @@
 require 'rbconfig'
 
-module SimpleRestClient
+module RestMan
   module Platform
     # Return true if we are running on a darwin-based Ruby platform. This will
     # be false for jruby even on OS X.
@@ -43,7 +43,7 @@ module SimpleRestClient
     end
 
     def self.default_user_agent
-      "simple-rest-client/#{VERSION} (#{architecture}) #{ruby_agent_version}"
+      "rest-man/#{VERSION} (#{architecture}) #{ruby_agent_version}"
     end
   end
 end

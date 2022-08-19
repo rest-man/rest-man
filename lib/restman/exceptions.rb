@@ -1,4 +1,4 @@
-module SimpleRestClient
+module RestMan
 
   # Hash of HTTP status code => message.
   #
@@ -86,7 +86,7 @@ module SimpleRestClient
 
   STATUSES_COMPATIBILITY = {
     # The RFCs all specify "Not Found", but "Resource Not Found" was used in
-    # earlier SimpleRestClient releases.
+    # earlier RestMan releases.
     404 => ['ResourceNotFound'],
 
     # HTTP 413 was renamed to "Payload Too Large" in RFC7231.
@@ -100,7 +100,7 @@ module SimpleRestClient
   }
 
 
-  # This is the base SimpleRestClient exception class. Rescue it if you want to
+  # This is the base RestMan exception class. Rescue it if you want to
   # catch any exception that your request might raise
   # You can get the status code by e.http_code, or see anything about the
   # response via e.response.
@@ -148,7 +148,7 @@ module SimpleRestClient
   end
 
   # Compatibility
-  class ExceptionWithResponse < SimpleRestClient::Exception
+  class ExceptionWithResponse < RestMan::Exception
   end
 
   # The request failed with an error code not managed by the code
@@ -163,7 +163,7 @@ module SimpleRestClient
     end
   end
 
-  # SimpleRestClient exception classes. TODO: move all exceptions into this module.
+  # RestMan exception classes. TODO: move all exceptions into this module.
   #
   # We will a create an exception for each status code, see
   # http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
@@ -193,13 +193,13 @@ module SimpleRestClient
   module Exceptions
     # We have to split the Exceptions module like we do here because the
     # EXCEPTIONS_MAP is under Exceptions, but we depend on
-    # SimpleRestClient::RequestTimeout below.
+    # RestMan::RequestTimeout below.
 
     # Base class for request timeouts.
     #
-    # NB: Previous releases of simple-rest-client would raise RequestTimeout both for
+    # NB: Previous releases of rest-man would raise RequestTimeout both for
     # HTTP 408 responses and for actual connection timeouts.
-    class Timeout < SimpleRestClient::RequestTimeout
+    class Timeout < RestMan::RequestTimeout
       def initialize(message=nil, original_exception=nil)
         super(nil, nil)
         self.message = message if message
@@ -228,7 +228,7 @@ module SimpleRestClient
   # The server broke the connection prior to the request completing.  Usually
   # this means it crashed, or sometimes that your network connection was
   # severed before it could complete.
-  class ServerBrokeConnection < SimpleRestClient::Exception
+  class ServerBrokeConnection < RestMan::Exception
     def initialize(message = 'Server broke connection')
       super nil, nil
       self.message = message

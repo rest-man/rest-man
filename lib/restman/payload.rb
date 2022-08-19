@@ -9,12 +9,12 @@ rescue LoadError
   require 'mime/types'
 end
 
-module SimpleRestClient
+module RestMan
   module Payload
     extend self
 
     def generate(params)
-      if params.is_a?(SimpleRestClient::Payload::Base)
+      if params.is_a?(RestMan::Payload::Base)
         # pass through Payload objects unchanged
         params
       elsif params.is_a?(String)
@@ -144,7 +144,7 @@ module SimpleRestClient
       def build_stream(params)
         b = '--' + boundary
 
-        @stream = Tempfile.new('simple-rest-client.multipart.')
+        @stream = Tempfile.new('rest-man.multipart.')
         @stream.binmode
         @stream.write(b + EOL)
 
@@ -216,7 +216,7 @@ module SimpleRestClient
       # practice no major browser that I'm aware of uses percent encoding.
       #
       # Further discussion of multipart encoding:
-      # https://github.com/simple-rest-client/simple-rest-client/pull/403#issuecomment-156976930
+      # https://github.com/rest-man/rest-man/pull/403#issuecomment-156976930
       #
       def handle_key key
         key

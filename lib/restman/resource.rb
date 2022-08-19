@@ -1,36 +1,36 @@
-module SimpleRestClient
+module RestMan
   # A class that can be instantiated for access to a RESTful resource,
   # including authentication.
   #
   # Example:
   #
-  #   resource = SimpleRestClient::Resource.new('http://some/resource')
+  #   resource = RestMan::Resource.new('http://some/resource')
   #   jpg = resource.get(:accept => 'image/jpg')
   #
   # With HTTP basic authentication:
   #
-  #   resource = SimpleRestClient::Resource.new('http://protected/resource', :user => 'user', :password => 'password')
+  #   resource = RestMan::Resource.new('http://protected/resource', :user => 'user', :password => 'password')
   #   resource.delete
   #
   # With a timeout (seconds):
   #
-  #   SimpleRestClient::Resource.new('http://slow', :read_timeout => 10)
+  #   RestMan::Resource.new('http://slow', :read_timeout => 10)
   #
   # With an open timeout (seconds):
   #
-  #   SimpleRestClient::Resource.new('http://behindfirewall', :open_timeout => 10)
+  #   RestMan::Resource.new('http://behindfirewall', :open_timeout => 10)
   #
   # You can also use resources to share common headers. For headers keys,
   # symbols are converted to strings. Example:
   #
-  #   resource = SimpleRestClient::Resource.new('http://some/resource', :headers => { :client_version => 1 })
+  #   resource = RestMan::Resource.new('http://some/resource', :headers => { :client_version => 1 })
   #
   # This header will be transported as X-Client-Version (notice the X prefix,
   # capitalization and hyphens)
   #
   # Use the [] syntax to allocate subresources:
   #
-  #   site = SimpleRestClient::Resource.new('http://example.com', :user => 'adam', :password => 'mypasswd')
+  #   site = RestMan::Resource.new('http://example.com', :user => 'adam', :password => 'mypasswd')
   #   site['posts/1/comments'].post 'Good article.', :content_type => 'text/plain'
   #
   class Resource
@@ -128,21 +128,21 @@ module SimpleRestClient
     end
 
     def log
-      options[:log] || SimpleRestClient.log
+      options[:log] || RestMan.log
     end
 
     # Construct a subresource, preserving authentication.
     #
     # Example:
     #
-    #   site = SimpleRestClient::Resource.new('http://example.com', 'adam', 'mypasswd')
+    #   site = RestMan::Resource.new('http://example.com', 'adam', 'mypasswd')
     #   site['posts/1/comments'].post 'Good article.', :content_type => 'text/plain'
     #
     # This is especially useful if you wish to define your site in one place and
     # call it in multiple locations:
     #
     #   def orders
-    #     SimpleRestClient::Resource.new('http://example.com/orders', 'admin', 'mypasswd')
+    #     RestMan::Resource.new('http://example.com/orders', 'admin', 'mypasswd')
     #   end
     #
     #   orders.get                     # GET http://example.com/orders
@@ -151,7 +151,7 @@ module SimpleRestClient
     #
     # Nest resources as far as you want:
     #
-    #   site = SimpleRestClient::Resource.new('http://example.com')
+    #   site = RestMan::Resource.new('http://example.com')
     #   posts = site['posts']
     #   first_post = posts['1']
     #   comments = first_post['comments']

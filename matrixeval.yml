@@ -1,6 +1,6 @@
 version: 0.4
 target: ruby
-project_name: simple_rest_client
+project_name: rest_man
 parallel_workers: number_of_processors
 commands:
   - jruby

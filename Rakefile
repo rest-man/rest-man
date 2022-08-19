@@ -1,9 +1,9 @@
 # load `rake build/install/release tasks'
 require 'bundler/setup'
-require_relative './lib/simplerestclient/version'
+require_relative './lib/restman/version'
 
 namespace :ruby do
-  Bundler::GemHelper.install_tasks(:name => 'simple-rest-client')
+  Bundler::GemHelper.install_tasks(:name => 'rest-man')
 end
 
 require "rspec/core/rake_task"
@@ -65,23 +65,23 @@ WindowsPlatforms = %w{x86-mingw32 x64-mingw32 x86-mswin32}
 
 namespace :all do
 
-  desc "Build simple-rest-client #{SimpleRestClient::VERSION} for all platforms"
+  desc "Build rest-man #{RestMan::VERSION} for all platforms"
   task :build => ['ruby:build'] + \
     WindowsPlatforms.map {|p| "windows:#{p}:build"}
 
-  desc "Create tag v#{SimpleRestClient::VERSION} and for all platforms build and " \
-    "push simple-rest-client #{SimpleRestClient::VERSION} to Rubygems"
+  desc "Create tag v#{RestMan::VERSION} and for all platforms build and " \
+    "push rest-man #{RestMan::VERSION} to Rubygems"
   task :release => ['build', 'ruby:release'] + \
     WindowsPlatforms.map {|p| "windows:#{p}:push"}
 
 end
 
 namespace :windows do
-  spec_path = File.join(File.dirname(__FILE__), 'simple-rest-client.windows.gemspec')
+  spec_path = File.join(File.dirname(__FILE__), 'rest-man.windows.gemspec')
 
   WindowsPlatforms.each do |platform|
     namespace platform do
-      gem_filename = "simple-rest-client-#{SimpleRestClient::VERSION}-#{platform}.gem"
+      gem_filename = "rest-man-#{RestMan::VERSION}-#{platform}.gem"
       base = File.dirname(__FILE__)
       pkg_dir = File.join(base, 'pkg')
       gem_file_path = File.join(pkg_dir, gem_filename)
@@ -96,7 +96,7 @@ namespace :windows do
             if ok
               FileUtils.mkdir_p(pkg_dir)
               FileUtils.mv(File.join(base, gem_filename), pkg_dir)
-              Bundler.ui.confirm("simple-rest-client #{SimpleRestClient::VERSION} " \
+              Bundler.ui.confirm("rest-man #{RestMan::VERSION} " \
                                  "built to pkg/#{gem_filename}")
             else
               abort "Command `gem build` failed: #{res}"
@@ -123,7 +123,7 @@ require 'rdoc/task'
 
 Rake::RDocTask.new do |t|
   t.rdoc_dir = 'rdoc'
-  t.title    = "simple-rest-client, fetch RESTful resources effortlessly"
+  t.title    = "rest-man, fetch RESTful resources effortlessly"
   t.options << '--line-numbers' << '--inline-source' << '-A cattr_accessor=object'
   t.options << '--charset' << 'utf-8'
   t.rdoc_files.include('README.md')

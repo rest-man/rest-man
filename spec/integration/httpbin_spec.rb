@@ -3,7 +3,7 @@ require 'json'
 
 require 'zlib'
 
-describe SimpleRestClient::Request do
+describe RestMan::Request do
 
   def default_httpbin_url
     # add a hack to work around java/jruby bug
@@ -27,7 +27,7 @@ describe SimpleRestClient::Request do
 
   def execute_httpbin(suffix, opts={})
     opts = {url: httpbin(suffix)}.merge(opts)
-    SimpleRestClient::Request.execute(opts)
+    RestMan::Request.execute(opts)
   end
 
   def execute_httpbin_json(suffix, opts={})
@@ -38,7 +38,7 @@ describe SimpleRestClient::Request do
     it 'sends a user agent' do
       VCR.use_cassette("request_httpbin_with_user_agent") do
         data = execute_httpbin_json('user-agent', method: :get)
-        expect(data['user-agent']).to match(/simple-rest-client/)
+        expect(data['user-agent']).to match(/rest-man/)
       end
     end
 
@@ -46,7 +46,7 @@ describe SimpleRestClient::Request do
       VCR.use_cassette("request_httpbin_with_cookies") do
         expect {
           execute_httpbin('cookies/set?foo=bar', method: :get, max_redirects: 0)
-        }.to raise_error(SimpleRestClient::Found) { |ex|
+        }.to raise_error(RestMan::Found) { |ex|
           expect(ex.http_code).to eq 302
           expect(ex.response.cookies['foo']).to eq 'bar'
         }
@@ -66,7 +66,7 @@ describe SimpleRestClient::Request do
         expect {
           execute_httpbin('cookies/set?foo=' + CGI.escape('"bar:baz"'),
                           method: :get, max_redirects: 0)
-        }.to raise_error(SimpleRestClient::Found) { |ex|
+        }.to raise_error(RestMan::Found) { |ex|
           expect(ex.http_code).to eq 302
           expect(ex.response.cookies['foo']).to eq '"bar:baz"'
         }
@@ -83,7 +83,7 @@ describe SimpleRestClient::Request do
 
         expect {
           execute_httpbin_json("basic-auth/#{user}/#{pass}", method: :get, user: user, password: 'badpass')
-        }.to raise_error(SimpleRestClient::Unauthorized) { |ex|
+        }.to raise_error(RestMan::Unauthorized) { |ex|
           expect(ex.http_code).to eq 401
         }
       end

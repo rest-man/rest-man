@@ -1,10 +1,10 @@
 # -*- encoding: utf-8 -*-
 
-require File.expand_path('../lib/simplerestclient/version', __FILE__)
+require File.expand_path('../lib/restman/version', __FILE__)
 
 Gem::Specification.new do |s|
-  s.name = 'simple-rest-client'
-  s.version = SimpleRestClient::VERSION
+  s.name = 'rest-man'
+  s.version = RestMan::VERSION
   s.authors = ['Hopper Gee']
   s.description = 'A simple HTTP and REST client for Ruby, inspired by the Sinatra microframework style of specifying actions: get, put, post, delete.'
   s.license = 'MIT'
@@ -13,9 +13,9 @@ Gem::Specification.new do |s|
   s.files = `git ls-files -z`.split("\0")
   s.test_files = `git ls-files -z spec/`.split("\0")
   s.bindir = "exe"
-  s.executables = ['simplerestclient']
+  s.executables = ['restman']
 
-  s.homepage = 'https://github.com/simple-rest-client/simple-rest-client'
+  s.homepage = 'https://github.com/rest-man/rest-man'
   s.summary = 'Simple HTTP and REST client for Ruby, inspired by microframework syntax for specifying actions.'
 
   s.add_development_dependency('webmock', '~> 3.0')
@@ -34,7 +34,7 @@ Gem::Specification.new do |s|
 
   case ENV['BUILD_PLATFORM'] || RUBY_PLATFORM
   when /(mingw32|mswin32)/
-    # ffi is needed for SimpleRestClient::Windows::RootCerts
+    # ffi is needed for RestMan::Windows::RootCerts
     s.add_dependency('ffi', '~> 1.9')
     s.platform = platform
   end

@@ -1,5 +1,5 @@
 require 'webmock/rspec'
-require 'simple-rest-client'
+require 'rest-man'
 
 require_relative './helpers'
 require 'byebug' unless RUBY_PLATFORM == 'java'
