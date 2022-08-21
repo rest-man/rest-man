@@ -1,5 +1,9 @@
 # REST Man -- simple DSL for accessing HTTP and REST resources
 
+[![CI](https://github.com/rest-man/rest-man/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/rest-man/rest-man/actions/workflows/ci.yml)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/f68e8752d2c740129b82394f973de025)](https://www.codacy.com/gh/rest-man/rest-man/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=rest-man/rest-man&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://app.codacy.com/project/badge/Coverage/f68e8752d2c740129b82394f973de025)](https://www.codacy.com/gh/rest-man/rest-man/dashboard?utm_source=github.com&utm_medium=referral&utm_content=rest-man/rest-man&utm_campaign=Badge_Coverage)
+
 A simple HTTP and REST client for Ruby, inspired by the Sinatra's microframework style
 of specifying actions: get, put, post, delete.
 
