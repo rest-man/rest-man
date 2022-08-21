@@ -1,4 +1,4 @@
-name: Run tests against all matrix
+name: CI
 
 on:
   push:
