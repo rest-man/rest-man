@@ -262,6 +262,14 @@ RestMan::Found: 302 Found
 => RestMan::Response 200 "{\n  "args":..."
 ```
 
+#### Manually set max retries
+
+The default max_retries is 1. You can change it to any number you like.
+
+```ruby
+RestMan::Request.execute(method: :get, url: 'http://httpbin.org', max_retires: 0)
+```
+
 ## Result handling
 
 The result of a `RestMan::Request` is a `RestMan::Response` object.
