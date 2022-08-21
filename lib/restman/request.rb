@@ -396,22 +396,7 @@ module RestMan
 
       # override headers from the payload (e.g. Content-Type, Content-Length)
       if @payload
-        payload_headers = @payload.headers
-
-        # Warn the user if we override any headers that were previously
-        # present. This usually indicates that rest-man was passed
-        # conflicting information, e.g. if it was asked to render a payload as
-        # x-www-form-urlencoded but a Content-Type application/json was
-        # also supplied by the user.
-        payload_headers.each_pair do |key, val|
-          if headers.include?(key) && headers[key] != val
-            warn("warning: Overriding #{key.inspect} header " +
-                 "#{headers.fetch(key).inspect} with #{val.inspect} " +
-                 "due to payload")
-          end
-        end
-
-        headers.merge!(payload_headers)
+        headers = @payload.headers.merge(headers)
       end
 
       # merge in cookies
