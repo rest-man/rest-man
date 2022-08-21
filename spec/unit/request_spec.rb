@@ -20,6 +20,7 @@ describe RestMan::Request, :include_helpers do
     allow(@net).to receive(:verify_callback=)
     allow(@net).to receive(:ciphers=)
     allow(@net).to receive(:cert_store=)
+    allow(@net).to receive(:max_retries=)
     RestMan.log = nil
   end
 

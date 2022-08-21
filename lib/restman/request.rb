@@ -33,6 +33,7 @@ module RestMan
   # * :stream_log_percent (Only relevant with :raw_response => true) Customize
   #     the interval at which download progress is logged. Defaults to every
   #     10% complete.
+  # * :max_retries maximum number of times to retry an idempotent request (default to 1)
   # * :max_redirects maximum number of redirections (default to 10)
   # * :proxy An HTTP proxy URI to use for this request. Any value here
   #   (including nil) will override RestMan.proxy.
@@ -54,7 +55,7 @@ module RestMan
     attr_reader :method, :uri, :url, :headers, :payload, :proxy,
                 :user, :password, :read_timeout, :max_redirects,
                 :open_timeout, :raw_response, :processed_headers, :args,
-                :ssl_opts, :write_timeout
+                :ssl_opts, :write_timeout, :max_retries
 
     # An array of previous redirection responses
     attr_accessor :redirection_history
@@ -154,6 +155,7 @@ module RestMan
 
       @log = args[:log]
       @max_redirects = args[:max_redirects] || 10
+      @max_retries = args[:max_retries] || 1
       @processed_headers = make_headers headers
       @processed_headers_lowercase = Hash[@processed_headers.map {|k, v| [k.downcase, v]}]
       @args = args
@@ -673,6 +675,8 @@ module RestMan
       net.ca_file = ssl_ca_file if ssl_ca_file
       net.ca_path = ssl_ca_path if ssl_ca_path
       net.cert_store = ssl_cert_store if ssl_cert_store
+
+      net.max_retries = max_retries
 
       # We no longer rely on net.verify_callback for the main SSL verification
       # because it's not well supported on all platforms (see comments below).
