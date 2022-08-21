@@ -33,4 +33,12 @@ jobs:
         ruby-version: ${{ matrix.ruby }}
         bundler-cache: true
     - name: Run all tests with RSpec 
+      env:
+        UPLOAD_COVERAGE_TO_CODACY: true
       run: bundle exec rspec
+    - name: Run codacy-coverage-reporter
+      if: matrix.ruby == '3.1'
+      uses: codacy/codacy-coverage-reporter-action@v1
+      with:
+        project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
+        coverage-reports: coverage/coverage.xml
