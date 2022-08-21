@@ -12,9 +12,6 @@ commands:
 matrix:
   ruby:
     variants:
-      - key: 2.5
-        container:
-          image: ruby:2.5.9
       - key: 2.6
         container:
           image: ruby:2.6.10
