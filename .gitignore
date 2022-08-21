@@ -11,3 +11,4 @@
 .ruby-version
 .matrixeval/docker-compose
 .matrixeval/gemfile_locks
+coverage

@@ -1,3 +1,14 @@
+require 'simplecov'
+
+if ENV['UPLOAD_COVERAGE_TO_CODACY']
+  require 'simplecov-cobertura'
+  SimpleCov.formatter = SimpleCov::Formatter::CoberturaFormatter
+end
+
+SimpleCov.start do
+  add_filter "/spec"
+end
+
 require 'webmock/rspec'
 require 'rest-man'
 

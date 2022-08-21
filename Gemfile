@@ -8,4 +8,6 @@ group :development, :test do
   gem 'rake'
   gem 'byebug' unless RUBY_PLATFORM == 'java'
   gem 'ruby-debug' if RUBY_PLATFORM == 'java'
+  gem 'simplecov'
+  gem 'simplecov-cobertura'
 end
