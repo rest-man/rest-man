@@ -207,19 +207,24 @@ module RestMan
       end
     end
 
-    # Timeout when connecting to a server. Typically wraps Net::OpenTimeout (in
-    # ruby 2.0 or greater).
+    # Timeout when connecting to a server. Typically wraps Net::OpenTimeout
     class OpenTimeout < Timeout
       def default_message
         'Timed out connecting to server'
       end
     end
 
-    # Timeout when reading from a server. Typically wraps Net::ReadTimeout (in
-    # ruby 2.0 or greater).
+    # Timeout when reading from a server. Typically wraps Net::ReadTimeout
     class ReadTimeout < Timeout
       def default_message
         'Timed out reading data from server'
+      end
+    end
+
+    # Timeout when writing to a server. Typically wraps Net::WriteTimeout
+    class WriteTimeout < Timeout
+      def default_message
+        'Timed out writing data to server'
       end
     end
   end

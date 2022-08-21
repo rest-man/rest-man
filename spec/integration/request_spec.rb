@@ -129,6 +129,18 @@ describe RestMan::Request do
       expect { request.execute }.to(
         raise_error(RestMan::Exceptions::ReadTimeout))
     end
+
+    it "raises WriteTimeout when it hits a write timeout via :write_timeout" do
+      allow_any_instance_of(Net::HTTP).to receive(:request).and_raise(Net::WriteTimeout.new)
+
+      request = RestMan::Request.new(
+        :method => :post,
+        :url => 'https://www.mozilla.org',
+        :write_timeout => 1e-10,
+      )
+      expect { request.execute }.to(
+        raise_error(RestMan::Exceptions::WriteTimeout))
+    end
   end
 
 end
