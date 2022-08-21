@@ -237,31 +237,14 @@ describe RestMan::Request, :include_helpers do
     end
   end
 
-  it 'warns when overriding existing headers via payload' do
-    expect(fake_stderr {
-      RestMan::Request.new(method: :post, url: 'example.com',
-                              payload: {'foo' => 1}, headers: {content_type: :json})
-    }).to match(/warning: Overriding "Content-Type" header/i)
-    expect(fake_stderr {
-      RestMan::Request.new(method: :post, url: 'example.com',
-                              payload: {'foo' => 1}, headers: {'Content-Type' => 'application/json'})
-    }).to match(/warning: Overriding "Content-Type" header/i)
-
-    expect(fake_stderr {
-      RestMan::Request.new(method: :post, url: 'example.com',
-                              payload: '123456', headers: {content_length: '20'})
-    }).to match(/warning: Overriding "Content-Length" header/i)
-    expect(fake_stderr {
-      RestMan::Request.new(method: :post, url: 'example.com',
-                              payload: '123456', headers: {'Content-Length' => '20'})
-    }).to match(/warning: Overriding "Content-Length" header/i)
-  end
-
-  it "does not warn when overriding user header with header derived from payload if those header values were identical" do
-    expect(fake_stderr {
-      RestMan::Request.new(method: :post, url: 'example.com',
-                              payload: {'foo' => '123456'}, headers: { 'Content-Type' => 'application/x-www-form-urlencoded' })
-    }).not_to match(/warning: Overriding "Content-Type" header/i)
+  it "does not override headers" do
+    request = RestMan::Request.new(
+      method: :post,
+      url: 'example.com',
+      payload: {'foo' => '123456'},
+      headers: { 'Content-Type' => 'application/x-www-form-urlencoded; charset=UTF-8' }
+    )
+    expect(request.processed_headers['Content-Type']).to eq('application/x-www-form-urlencoded; charset=UTF-8')
   end
 
   it 'does not warn for a normal looking payload' do
