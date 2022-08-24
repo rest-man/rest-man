@@ -26,6 +26,20 @@ describe RestMan::AbstractResponse, :include_helpers do
     expect(@response.code).to eq 200
   end
 
+  [200, 255, 299].each do |code|
+    it "#success? - return true when response code is #{code}" do
+      expect(@net_http_res).to receive(:code).and_return(code.to_s)
+      expect(@response.success?).to eq true
+    end
+  end
+
+  [100, 199, 300, 399, 400, 499, 500, 599].each do |code|
+    it "#success? - return false when response code is #{code}" do
+      expect(@net_http_res).to receive(:code).and_return(code.to_s)
+      expect(@response.success?).to eq false
+    end
+  end
+
   it "has a nice description" do
     expect(@net_http_res).to receive(:to_hash).and_return({'Content-Type' => ['application/pdf']})
     expect(@net_http_res).to receive(:code).and_return('200')
