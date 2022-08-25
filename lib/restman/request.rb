@@ -47,6 +47,7 @@ module RestMan
   # * :ssl_version specifies the SSL version for the underlying Net::HTTP connection
   # * :ssl_min_version specifies the minimum SSL version for the underlying Net::HTTP connection
   # * :ssl_max_version specifies the maximum SSL version for the underlying Net::HTTP connection
+  # * :ssl_timeout sets the SSL timeout seconds
   # * :ssl_ciphers sets SSL ciphers for the connection. See
   #     OpenSSL::SSL::SSLContext#ciphers=
   # * :before_execution_proc a Proc to call before executing the request. This
@@ -68,7 +69,7 @@ module RestMan
 
     SSLOptionList = %w{client_cert client_key ca_file ca_path cert_store
                        version ciphers verify_callback verify_callback_warnings
-                       min_version max_version}
+                       min_version max_version timeout}
 
     def inspect
       "<RestMan::Request @method=#{@method.inspect}, @url=#{@url.inspect}>"
@@ -656,6 +657,7 @@ module RestMan
       net.ssl_version = ssl_version if ssl_version
       net.min_version = ssl_min_version if ssl_min_version
       net.max_version = ssl_max_version if ssl_max_version
+      net.ssl_timeout = ssl_timeout if ssl_timeout
       net.ciphers = ssl_ciphers if ssl_ciphers
 
       net.verify_mode = verify_ssl

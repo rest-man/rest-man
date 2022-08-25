@@ -911,6 +911,19 @@ describe RestMan::Request, :include_helpers do
       @request.send(:transmit, @uri, 'req', 'payload')
     end
 
+    it "should set the ssl_timeout if provided" do
+      @request = RestMan::Request.new(
+        :method => :put,
+        :url => 'https://some/resource',
+        :payload => 'payload',
+        :ssl_timeout => 1
+      )
+      expect(@net).to receive(:ssl_timeout=).with(1)
+      allow(@http).to receive(:request)
+      allow(@request).to receive(:process_result)
+      @request.send(:transmit, @uri, 'req', 'payload')
+    end
+
     it "should set the ssl_ciphers if provided" do
       ciphers = 'AESGCM:HIGH:!aNULL:!eNULL:RC4+RSA'
       @request = RestMan::Request.new(
