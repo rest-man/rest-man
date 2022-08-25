@@ -42,6 +42,7 @@ module RestMan
   # * :read_timeout, :open_timeout and :write_timeout are how long to wait for a response and
   #     to open a connection, in seconds. Pass nil to disable the timeout.
   # * :timeout can be used to set: read_timeout, open_timeout and write_timeout
+  # * :keep_alive_timeout sets seconds to reuse the connection of the previous request. (default to 2 seconds)
   # * :ssl_client_cert, :ssl_client_key, :ssl_ca_file, :ssl_ca_path,
   #     :ssl_cert_store, :ssl_verify_callback, :ssl_verify_callback_warnings
   # * :ssl_version specifies the SSL version for the underlying Net::HTTP connection
@@ -58,7 +59,7 @@ module RestMan
     attr_reader :method, :uri, :url, :headers, :payload, :proxy,
                 :user, :password, :read_timeout, :max_redirects,
                 :open_timeout, :raw_response, :processed_headers, :args,
-                :ssl_opts, :write_timeout, :max_retries
+                :ssl_opts, :write_timeout, :max_retries, :keep_alive_timeout
 
     # An array of previous redirection responses
     attr_accessor :redirection_history
@@ -111,6 +112,8 @@ module RestMan
       end
       @block_response = args[:block_response]
       @raw_response = args[:raw_response] || false
+
+      @keep_alive_timeout = args[:keep_alive_timeout]
 
       @stream_log_percent = args[:stream_log_percent] || 10
       if @stream_log_percent <= 0 || @stream_log_percent > 100
@@ -669,6 +672,8 @@ module RestMan
       net.cert_store = ssl_cert_store if ssl_cert_store
 
       net.max_retries = max_retries
+
+      net.keep_alive_timeout = keep_alive_timeout if keep_alive_timeout
 
       # We no longer rely on net.verify_callback for the main SSL verification
       # because it's not well supported on all platforms (see comments below).

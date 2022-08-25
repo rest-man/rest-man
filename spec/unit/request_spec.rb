@@ -856,6 +856,19 @@ describe RestMan::Request, :include_helpers do
       @request.send(:transmit, @uri, 'req', 'payload')
     end
 
+    it "should set the keep_alive_timeout if provided" do
+      @request = RestMan::Request.new(
+        :method => :put,
+        :url => 'https://some/resource',
+        :payload => 'payload',
+        :keep_alive_timeout => 1
+      )
+      expect(@net).to receive(:keep_alive_timeout=).with(1)
+      allow(@http).to receive(:request)
+      allow(@request).to receive(:process_result)
+      @request.send(:transmit, @uri, 'req', 'payload')
+    end
+
     it "should default to not having an ssl_client_cert" do
       expect(@request.ssl_client_cert).to be(nil)
     end
