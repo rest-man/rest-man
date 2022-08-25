@@ -42,20 +42,28 @@ module RestMan
   # * :read_timeout, :open_timeout and :write_timeout are how long to wait for a response and
   #     to open a connection, in seconds. Pass nil to disable the timeout.
   # * :timeout can be used to set: read_timeout, open_timeout and write_timeout
+  # * :keep_alive_timeout sets seconds to reuse the connection of the previous request. (default to 2 seconds)
   # * :ssl_client_cert, :ssl_client_key, :ssl_ca_file, :ssl_ca_path,
   #     :ssl_cert_store, :ssl_verify_callback, :ssl_verify_callback_warnings
   # * :ssl_version specifies the SSL version for the underlying Net::HTTP connection
+  # * :ssl_min_version specifies the minimum SSL version for the underlying Net::HTTP connection
+  # * :ssl_max_version specifies the maximum SSL version for the underlying Net::HTTP connection
+  # * :ssl_timeout sets the SSL timeout seconds
   # * :ssl_ciphers sets SSL ciphers for the connection. See
   #     OpenSSL::SSL::SSLContext#ciphers=
   # * :before_execution_proc a Proc to call before executing the request. This
   #      proc, like procs from RestMan.before_execution_procs, will be
   #      called with the HTTP request and request params.
+  # * :close_on_empty_response default to false
+  # * :local_host sets the local address for the outgoing connection
+  # * :local_port sets the local port for the outgoing connection
   class Request
 
     attr_reader :method, :uri, :url, :headers, :payload, :proxy,
                 :user, :password, :read_timeout, :max_redirects,
                 :open_timeout, :raw_response, :processed_headers, :args,
-                :ssl_opts, :write_timeout, :max_retries
+                :ssl_opts, :write_timeout, :max_retries, :keep_alive_timeout,
+                :close_on_empty_response, :local_host, :local_port
 
     # An array of previous redirection responses
     attr_accessor :redirection_history
@@ -65,7 +73,8 @@ module RestMan
     end
 
     SSLOptionList = %w{client_cert client_key ca_file ca_path cert_store
-                       version ciphers verify_callback verify_callback_warnings}
+                       version ciphers verify_callback verify_callback_warnings
+                       min_version max_version timeout}
 
     def inspect
       "<RestMan::Request @method=#{@method.inspect}, @url=#{@url.inspect}>"
@@ -107,6 +116,17 @@ module RestMan
       end
       @block_response = args[:block_response]
       @raw_response = args[:raw_response] || false
+
+      if args.include?(:local_host)
+        @local_host = args[:local_host]
+      end
+
+      if args.include?(:local_port)
+        @local_port = args[:local_port]
+      end
+
+      @keep_alive_timeout = args[:keep_alive_timeout]
+      @close_on_empty_response = args[:close_on_empty_response]
 
       @stream_log_percent = args[:stream_log_percent] || 10
       if @stream_log_percent <= 0 || @stream_log_percent > 100
@@ -651,6 +671,9 @@ module RestMan
       net = net_http_object(uri.hostname, uri.port)
       net.use_ssl = uri.is_a?(URI::HTTPS)
       net.ssl_version = ssl_version if ssl_version
+      net.min_version = ssl_min_version if ssl_min_version
+      net.max_version = ssl_max_version if ssl_max_version
+      net.ssl_timeout = ssl_timeout if ssl_timeout
       net.ciphers = ssl_ciphers if ssl_ciphers
 
       net.verify_mode = verify_ssl
@@ -662,6 +685,11 @@ module RestMan
       net.cert_store = ssl_cert_store if ssl_cert_store
 
       net.max_retries = max_retries
+
+      net.keep_alive_timeout = keep_alive_timeout if keep_alive_timeout
+      net.close_on_empty_response = close_on_empty_response if close_on_empty_response
+      net.local_host = local_host if local_host
+      net.local_port = local_port if local_port
 
       # We no longer rely on net.verify_callback for the main SSL verification
       # because it's not well supported on all platforms (see comments below).

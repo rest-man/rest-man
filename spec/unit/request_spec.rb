@@ -856,6 +856,58 @@ describe RestMan::Request, :include_helpers do
       @request.send(:transmit, @uri, 'req', 'payload')
     end
 
+    it "should set the keep_alive_timeout if provided" do
+      @request = RestMan::Request.new(
+        :method => :put,
+        :url => 'https://some/resource',
+        :payload => 'payload',
+        :keep_alive_timeout => 1
+      )
+      expect(@net).to receive(:keep_alive_timeout=).with(1)
+      allow(@http).to receive(:request)
+      allow(@request).to receive(:process_result)
+      @request.send(:transmit, @uri, 'req', 'payload')
+    end
+
+    it "should set the close_on_empty_response if provided" do
+      @request = RestMan::Request.new(
+        :method => :put,
+        :url => 'https://some/resource',
+        :payload => 'payload',
+        :close_on_empty_response => true
+      )
+      expect(@net).to receive(:close_on_empty_response=).with(true)
+      allow(@http).to receive(:request)
+      allow(@request).to receive(:process_result)
+      @request.send(:transmit, @uri, 'req', 'payload')
+    end
+
+    it "should set the local_host if provided" do
+      @request = RestMan::Request.new(
+        :method => :put,
+        :url => 'https://some/resource',
+        :payload => 'payload',
+        :local_host => 'localhost'
+      )
+      expect(@net).to receive(:local_host=).with('localhost')
+      allow(@http).to receive(:request)
+      allow(@request).to receive(:process_result)
+      @request.send(:transmit, @uri, 'req', 'payload')
+    end
+
+    it "should set the local_port if provided" do
+      @request = RestMan::Request.new(
+        :method => :put,
+        :url => 'https://some/resource',
+        :payload => 'payload',
+        :local_port => 3000
+      )
+      expect(@net).to receive(:local_port=).with(3000)
+      allow(@http).to receive(:request)
+      allow(@request).to receive(:process_result)
+      @request.send(:transmit, @uri, 'req', 'payload')
+    end
+
     it "should default to not having an ssl_client_cert" do
       expect(@request.ssl_client_cert).to be(nil)
     end
@@ -880,6 +932,45 @@ describe RestMan::Request, :include_helpers do
         :payload => 'payload'
       )
       expect(@net).not_to receive(:ssl_version=).with("TLSv1")
+      allow(@http).to receive(:request)
+      allow(@request).to receive(:process_result)
+      @request.send(:transmit, @uri, 'req', 'payload')
+    end
+
+    it "should set the ssl_min_version if provided" do
+      @request = RestMan::Request.new(
+        :method => :put,
+        :url => 'https://some/resource',
+        :payload => 'payload',
+        :ssl_min_version => :TLS1_2
+      )
+      expect(@net).to receive(:min_version=).with(:TLS1_2)
+      allow(@http).to receive(:request)
+      allow(@request).to receive(:process_result)
+      @request.send(:transmit, @uri, 'req', 'payload')
+    end
+
+    it "should set the ssl_max_version if provided" do
+      @request = RestMan::Request.new(
+        :method => :put,
+        :url => 'https://some/resource',
+        :payload => 'payload',
+        :ssl_max_version => :TLS1_2
+      )
+      expect(@net).to receive(:max_version=).with(:TLS1_2)
+      allow(@http).to receive(:request)
+      allow(@request).to receive(:process_result)
+      @request.send(:transmit, @uri, 'req', 'payload')
+    end
+
+    it "should set the ssl_timeout if provided" do
+      @request = RestMan::Request.new(
+        :method => :put,
+        :url => 'https://some/resource',
+        :payload => 'payload',
+        :ssl_timeout => 1
+      )
+      expect(@net).to receive(:ssl_timeout=).with(1)
       allow(@http).to receive(:request)
       allow(@request).to receive(:process_result)
       @request.send(:transmit, @uri, 'req', 'payload')
