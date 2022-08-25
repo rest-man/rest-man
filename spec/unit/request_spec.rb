@@ -882,6 +882,32 @@ describe RestMan::Request, :include_helpers do
       @request.send(:transmit, @uri, 'req', 'payload')
     end
 
+    it "should set the local_host if provided" do
+      @request = RestMan::Request.new(
+        :method => :put,
+        :url => 'https://some/resource',
+        :payload => 'payload',
+        :local_host => 'localhost'
+      )
+      expect(@net).to receive(:local_host=).with('localhost')
+      allow(@http).to receive(:request)
+      allow(@request).to receive(:process_result)
+      @request.send(:transmit, @uri, 'req', 'payload')
+    end
+
+    it "should set the local_port if provided" do
+      @request = RestMan::Request.new(
+        :method => :put,
+        :url => 'https://some/resource',
+        :payload => 'payload',
+        :local_port => 3000
+      )
+      expect(@net).to receive(:local_port=).with(3000)
+      allow(@http).to receive(:request)
+      allow(@request).to receive(:process_result)
+      @request.send(:transmit, @uri, 'req', 'payload')
+    end
+
     it "should default to not having an ssl_client_cert" do
       expect(@request.ssl_client_cert).to be(nil)
     end

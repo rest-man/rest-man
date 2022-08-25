@@ -55,13 +55,15 @@ module RestMan
   #      proc, like procs from RestMan.before_execution_procs, will be
   #      called with the HTTP request and request params.
   # * :close_on_empty_response default to false
+  # * :local_host sets the local address for the outgoing connection
+  # * :local_port sets the local port for the outgoing connection
   class Request
 
     attr_reader :method, :uri, :url, :headers, :payload, :proxy,
                 :user, :password, :read_timeout, :max_redirects,
                 :open_timeout, :raw_response, :processed_headers, :args,
                 :ssl_opts, :write_timeout, :max_retries, :keep_alive_timeout,
-                :close_on_empty_response
+                :close_on_empty_response, :local_host, :local_port
 
     # An array of previous redirection responses
     attr_accessor :redirection_history
@@ -114,6 +116,14 @@ module RestMan
       end
       @block_response = args[:block_response]
       @raw_response = args[:raw_response] || false
+
+      if args.include?(:local_host)
+        @local_host = args[:local_host]
+      end
+
+      if args.include?(:local_port)
+        @local_port = args[:local_port]
+      end
 
       @keep_alive_timeout = args[:keep_alive_timeout]
       @close_on_empty_response = args[:close_on_empty_response]
@@ -678,6 +688,8 @@ module RestMan
 
       net.keep_alive_timeout = keep_alive_timeout if keep_alive_timeout
       net.close_on_empty_response = close_on_empty_response if close_on_empty_response
+      net.local_host = local_host if local_host
+      net.local_port = local_port if local_port
 
       # We no longer rely on net.verify_callback for the main SSL verification
       # because it's not well supported on all platforms (see comments below).
