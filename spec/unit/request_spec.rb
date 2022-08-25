@@ -885,6 +885,32 @@ describe RestMan::Request, :include_helpers do
       @request.send(:transmit, @uri, 'req', 'payload')
     end
 
+    it "should set the ssl_min_version if provided" do
+      @request = RestMan::Request.new(
+        :method => :put,
+        :url => 'https://some/resource',
+        :payload => 'payload',
+        :ssl_min_version => :TLS1_2
+      )
+      expect(@net).to receive(:min_version=).with(:TLS1_2)
+      allow(@http).to receive(:request)
+      allow(@request).to receive(:process_result)
+      @request.send(:transmit, @uri, 'req', 'payload')
+    end
+
+    it "should set the ssl_max_version if provided" do
+      @request = RestMan::Request.new(
+        :method => :put,
+        :url => 'https://some/resource',
+        :payload => 'payload',
+        :ssl_max_version => :TLS1_2
+      )
+      expect(@net).to receive(:max_version=).with(:TLS1_2)
+      allow(@http).to receive(:request)
+      allow(@request).to receive(:process_result)
+      @request.send(:transmit, @uri, 'req', 'payload')
+    end
+
     it "should set the ssl_ciphers if provided" do
       ciphers = 'AESGCM:HIGH:!aNULL:!eNULL:RC4+RSA'
       @request = RestMan::Request.new(
