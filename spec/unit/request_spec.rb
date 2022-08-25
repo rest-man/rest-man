@@ -869,6 +869,19 @@ describe RestMan::Request, :include_helpers do
       @request.send(:transmit, @uri, 'req', 'payload')
     end
 
+    it "should set the close_on_empty_response if provided" do
+      @request = RestMan::Request.new(
+        :method => :put,
+        :url => 'https://some/resource',
+        :payload => 'payload',
+        :close_on_empty_response => true
+      )
+      expect(@net).to receive(:close_on_empty_response=).with(true)
+      allow(@http).to receive(:request)
+      allow(@request).to receive(:process_result)
+      @request.send(:transmit, @uri, 'req', 'payload')
+    end
+
     it "should default to not having an ssl_client_cert" do
       expect(@request.ssl_client_cert).to be(nil)
     end

@@ -54,12 +54,14 @@ module RestMan
   # * :before_execution_proc a Proc to call before executing the request. This
   #      proc, like procs from RestMan.before_execution_procs, will be
   #      called with the HTTP request and request params.
+  # * :close_on_empty_response default to false
   class Request
 
     attr_reader :method, :uri, :url, :headers, :payload, :proxy,
                 :user, :password, :read_timeout, :max_redirects,
                 :open_timeout, :raw_response, :processed_headers, :args,
-                :ssl_opts, :write_timeout, :max_retries, :keep_alive_timeout
+                :ssl_opts, :write_timeout, :max_retries, :keep_alive_timeout,
+                :close_on_empty_response
 
     # An array of previous redirection responses
     attr_accessor :redirection_history
@@ -114,6 +116,7 @@ module RestMan
       @raw_response = args[:raw_response] || false
 
       @keep_alive_timeout = args[:keep_alive_timeout]
+      @close_on_empty_response = args[:close_on_empty_response]
 
       @stream_log_percent = args[:stream_log_percent] || 10
       if @stream_log_percent <= 0 || @stream_log_percent > 100
@@ -674,6 +677,7 @@ module RestMan
       net.max_retries = max_retries
 
       net.keep_alive_timeout = keep_alive_timeout if keep_alive_timeout
+      net.close_on_empty_response = close_on_empty_response if close_on_empty_response
 
       # We no longer rely on net.verify_callback for the main SSL verification
       # because it's not well supported on all platforms (see comments below).
