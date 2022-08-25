@@ -31,6 +31,10 @@ module RestMan
       @code ||= @net_http_res.code.to_i
     end
 
+    def success?
+      (200..299).include?(code)
+    end
+
     def history
       @history ||= request.redirection_history || []
     end
