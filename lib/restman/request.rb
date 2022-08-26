@@ -193,15 +193,7 @@ module RestMan
       end
     end
 
-    # Render a hash of key => value pairs for cookies in the Request#cookie_jar
-    # that are valid for the Request#uri. This will not necessarily include all
-    # cookies if there are duplicate keys. It's safer to use the cookie_jar
-    # directly if that's a concern.
-    #
-    # @see Request#cookie_jar
-    #
-    # @return [Hash]
-    #
+    # :include: _doc/lib/restman/request/cookies.rdoc
     def cookies
       hash = {}
 

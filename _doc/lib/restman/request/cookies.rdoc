@@ -1,0 +1,11 @@
+:call-seq:
+  cookies -> hash
+ 
+Render a hash of key => value pairs for cookies in the Request#cookie_jar
+that are valid for the Request#uri. This will not necessarily include all
+cookies if there are duplicate keys. It's safer to use the cookie_jar
+directly if that's a concern.
+
+[See Also:]
+
+  - Request#cookie_jar
