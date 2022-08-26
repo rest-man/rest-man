@@ -1,0 +1,4 @@
+[Parameters:]
+
+  - *res*  -- The Net::HTTP response object
+  - *start_time* (Time) -- Time of request start

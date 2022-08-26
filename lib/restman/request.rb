@@ -633,8 +633,7 @@ module RestMan
       tf
     end
 
-    # @param res The Net::HTTP response object
-    # @param start_time [Time] Time of request start
+    # :include: _doc/lib/restman/request/process_result.rdoc
     def process_result(res, start_time, tempfile=nil, &block)
       if @raw_response
         unless tempfile
