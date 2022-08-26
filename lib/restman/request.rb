@@ -156,10 +156,7 @@ module RestMan
       end
     end
 
-    # Return true if the request URI will use HTTPS.
-    #
-    # @return [Boolean]
-    #
+    # :include: _doc/lib/restman/request/use_ssl.rdoc
     def use_ssl?
       uri.is_a?(URI::HTTPS)
     end
