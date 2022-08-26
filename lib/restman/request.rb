@@ -161,20 +161,7 @@ module RestMan
       uri.is_a?(URI::HTTPS)
     end
 
-    # Extract the query parameters and append them to the url
-    #
-    # Look through the headers hash for a :params option (case-insensitive,
-    # may be string or symbol). If present and the value is a Hash or
-    # RestMan::ParamsArray, *delete* the key/value pair from the headers
-    # hash and encode the value into a query string. Append this query string
-    # to the URL and return the resulting URL.
-    #
-    # @param [String] url
-    # @param [Hash] headers An options/headers hash to process. Mutation
-    #   warning: the params key may be removed if present!
-    #
-    # @return [String] resulting url with query string
-    #
+    # :include: _doc/lib/restman/request/process_url_params.rdoc
     def process_url_params(url, headers)
       url_params = nil
 
