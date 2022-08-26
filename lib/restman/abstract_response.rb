@@ -80,10 +80,7 @@ module RestMan
       hash
     end
 
-    # Cookie jar extracted from response headers.
-    #
-    # @return [HTTP::CookieJar]
-    #
+    # :include: _doc/lib/restman/abstract_response/cookie_jar.rdoc
     def cookie_jar
       return @cookie_jar if defined?(@cookie_jar) && @cookie_jar
 
