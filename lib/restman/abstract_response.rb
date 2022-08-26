@@ -92,16 +92,7 @@ module RestMan
       @cookie_jar = jar
     end
 
-    # Return the default behavior corresponding to the response code:
-    #
-    # For 20x status codes: return the response itself
-    #
-    # For 30x status codes:
-    #   301, 302, 307: redirect GET / HEAD if there is a Location header
-    #   303: redirect, changing method to GET, if there is a Location header
-    #
-    # For all other responses, raise a response exception
-    #
+    # :include: _doc/lib/restman/abstract_response/return.rdoc
     def return!(&block)
       case code
       when 200..207
