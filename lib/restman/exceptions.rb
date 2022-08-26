@@ -145,11 +145,7 @@ module RestMan
     end
   end
 
-  # RestMan exception classes. TODO: move all exceptions into this module.
-  #
-  # We will a create an exception for each status code, see
-  # http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
-  #
+  # :include: _doc/lib/restman/exceptions.rdoc
   module Exceptions
     # Map http status codes to the corresponding exception class
     EXCEPTIONS_MAP = {}
