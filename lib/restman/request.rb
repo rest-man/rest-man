@@ -338,16 +338,7 @@ module RestMan
       end
     end
 
-    # Normalize a URL by adding a protocol if none is present.
-    #
-    # If the string has no HTTP-like scheme (i.e. scheme followed by '//'), a
-    # scheme of 'http' will be added. This mimics the behavior of browsers and
-    # user agents like cURL.
-    #
-    # @param [String] url A URL string.
-    #
-    # @return [String]
-    #
+    # :include: _doc/lib/restman/request/normalize_url.rdoc
     def normalize_url(url)
       url = 'http://' + url unless url.match(%r{\A[a-z][a-z0-9+.-]*://}i)
       url
