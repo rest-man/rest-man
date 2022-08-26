@@ -461,17 +461,7 @@ module RestMan
       warned
     end
 
-    # Parse a method and return a normalized string version.
-    #
-    # Raise ArgumentError if the method is falsy, but otherwise do no
-    # validation.
-    #
-    # @param method [String, Symbol]
-    #
-    # @return [String]
-    #
-    # @see net_http_request_class
-    #
+    # :include: _doc/lib/restman/request/normalize_method.rdoc
     def normalize_method(method)
       raise ArgumentError.new('must pass :method') unless method
       method.to_s.downcase
