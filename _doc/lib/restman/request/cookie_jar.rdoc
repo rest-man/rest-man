@@ -1,0 +1,3 @@
+:call-seq:
+  cookie_jar() -> HTTP::CookieJar
+ 

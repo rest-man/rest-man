@@ -228,7 +228,7 @@ module RestMan
       hash
     end
 
-    # @return [HTTP::CookieJar]
+    # :include: _doc/lib/restman/request/cookie_jar.rdoc
     def cookie_jar
       @cookie_jar
     end
