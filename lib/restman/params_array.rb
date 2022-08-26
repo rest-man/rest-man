@@ -23,11 +23,7 @@ module RestMan
       array.map {|v| process_pair(v) }
     end
 
-    # A pair may be:
-    # - A single element hash, e.g. {foo: 'bar'}
-    # - A two element array, e.g. ['foo', 'bar']
-    # - A one element array, e.g. ['foo']
-    #
+    # :include: _doc/lib/restman/params_array/process_pair.rdoc
     def process_pair(pair)
       case pair
       when Hash

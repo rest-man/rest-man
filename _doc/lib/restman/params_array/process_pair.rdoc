@@ -1,0 +1,4 @@
+A pair may be:
+- A single element hash, e.g. {foo: 'bar'}
+- A two element array, e.g. ['foo', 'bar']
+- A one element array, e.g. ['foo']
