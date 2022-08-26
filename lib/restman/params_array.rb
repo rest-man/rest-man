@@ -1,15 +1,6 @@
 module RestMan
 
-  # The ParamsArray class is used to represent an ordered list of [key, value]
-  # pairs. Use this when you need to include a key multiple times or want
-  # explicit control over parameter ordering.
-  #
-  # Most of the request payload & parameter functions normally accept a Hash of
-  # keys => values, which does not allow for duplicated keys.
-  #
-  # @see RestMan::Utils.encode_query_string
-  # @see RestMan::Utils.flatten_params
-  #
+  # :include: _doc/lib/restman/params_array.rdoc
   class ParamsArray
     include Enumerable
 
