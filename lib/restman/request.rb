@@ -395,13 +395,7 @@ module RestMan
       log << out.join(', ') + "\n"
     end
 
-    # Return a hash of headers whose keys are capitalized strings
-    #
-    # BUG: stringify_headers does not fix the capitalization of headers that
-    # are already Strings. Leaving this behavior as is for now for
-    # backwards compatibility.
-    # https://github.com/rest-man/rest-man/issues/599
-    #
+    # :include: _doc/lib/restman/request/stringify_headers.rdoc
     def stringify_headers headers
       headers.inject({}) do |result, (key, value)|
         if key.is_a? Symbol
