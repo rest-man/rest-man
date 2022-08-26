@@ -430,16 +430,7 @@ module RestMan
 
     private
 
-    # Parse the `@url` string into a URI object and save it as
-    # `@uri`. Also save any basic auth user or password as @user and @password.
-    # If no auth info was passed, check for credentials in a Netrc file.
-    #
-    # @param [String] url A URL string.
-    #
-    # @return [URI]
-    #
-    # @raise URI::InvalidURIError on invalid URIs
-    #
+    # :include: _doc/lib/restman/request/parse_url_with_auth.rdoc
     def parse_url_with_auth!(url)
       uri = URI.parse(url)
 
