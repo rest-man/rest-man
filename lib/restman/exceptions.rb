@@ -173,10 +173,7 @@ module RestMan
     # EXCEPTIONS_MAP is under Exceptions, but we depend on
     # RestMan::RequestTimeout below.
 
-    # Base class for request timeouts.
-    #
-    # NB: Previous releases of rest-man would raise RequestTimeout both for
-    # HTTP 408 responses and for actual connection timeouts.
+    # :include: _doc/lib/restman/exceptions/timeout.rdoc
     class Timeout < RestMan::RequestTimeout
       def initialize(message=nil, original_exception=nil)
         super(nil, nil)
