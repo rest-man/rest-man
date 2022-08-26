@@ -290,13 +290,7 @@ module RestMan
       headers
     end
 
-    # The proxy URI for this request. If `:proxy` was provided on this request,
-    # use it over `RestMan.proxy`.
-    #
-    # Return false if a proxy was explicitly set and is falsy.
-    #
-    # @return [URI, false, nil]
-    #
+    # :include: _doc/lib/restman/request/proxy_uri.rdoc
     def proxy_uri
       if defined?(@proxy)
         if @proxy

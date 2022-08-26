@@ -1,0 +1,7 @@
+:call-seq:
+  proxy_uri -> URI or boolean or nil
+ 
+The proxy URI for this request. If `:proxy` was provided on this request,
+use it over `RestMan.proxy`.
+
+Return false if a proxy was explicitly set and is falsy.
