@@ -658,22 +658,7 @@ module RestMan
       URI.const_defined?(:Parser) ? URI::Parser.new : URI
     end
 
-    # Given a MIME type or file extension, return either a MIME type or, if
-    # none is found, the input unchanged.
-    #
-    #     >> maybe_convert_extension('json')
-    #     => 'application/json'
-    #
-    #     >> maybe_convert_extension('unknown')
-    #     => 'unknown'
-    #
-    #     >> maybe_convert_extension('application/xml')
-    #     => 'application/xml'
-    #
-    # @param ext [String]
-    #
-    # @return [String]
-    #
+    # :include: _doc/lib/restman/request/maybe_convert_extension.rdoc
     def maybe_convert_extension(ext)
       unless ext =~ /\A[a-zA-Z0-9_@-]+\z/
         # Don't look up strings unless they look like they could be a file
