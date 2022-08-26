@@ -269,26 +269,7 @@ module RestMan
       jar
     end
 
-    # Generate headers for use by a request. Header keys will be stringified
-    # using `#stringify_headers` to normalize them as capitalized strings.
-    #
-    # The final headers consist of:
-    #   - default headers from #default_headers
-    #   - user_headers provided here
-    #   - headers from the payload object (e.g. Content-Type, Content-Lenth)
-    #   - cookie headers from #make_cookie_header
-    #
-    # BUG: stringify_headers does not alter the capitalization of headers that
-    # are passed as strings, it only normalizes those passed as symbols. This
-    # behavior will probably remain for a while for compatibility, but it means
-    # that the warnings that attempt to detect accidental header overrides may
-    # not always work.
-    # https://github.com/rest-man/rest-man/issues/599
-    #
-    # @param [Hash] user_headers User-provided headers to include
-    #
-    # @return [Hash<String, String>] A hash of HTTP headers => values
-    #
+    # :include: _doc/lib/restman/request/make_headers.rdoc
     def make_headers(user_headers)
       headers = stringify_headers(default_headers).merge(stringify_headers(user_headers))
 
