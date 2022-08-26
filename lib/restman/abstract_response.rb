@@ -156,12 +156,7 @@ module RestMan
 
     private
 
-    # Follow a redirection
-    #
-    # @param new_args [Hash] Start with this hash of arguments for the
-    #   redirection request. The hash will be mutated, so be sure to dup any
-    #   existing hash that should not be modified.
-    #
+    # :include: _doc/lib/restman/abstract_response/_follow_redirection.rdoc
     def _follow_redirection(new_args, &block)
 
       # parse location header and merge into existing URL
