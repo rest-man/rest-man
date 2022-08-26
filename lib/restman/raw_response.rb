@@ -10,10 +10,7 @@ module RestMan
       "<RestMan::RawResponse @code=#{code.inspect}, @file=#{file.inspect}, @request=#{request.inspect}>"
     end
 
-    # @param [Tempfile] tempfile The temporary file containing the body
-    # @param [Net::HTTPResponse] net_http_res
-    # @param [RestMan::Request] request
-    # @param [Time] start_time
+    # :include: _doc/lib/restman/raw_response/new.rdoc
     def initialize(tempfile, net_http_res, request, start_time=nil)
       @file = tempfile
 

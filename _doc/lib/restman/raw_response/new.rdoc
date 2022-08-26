@@ -1,0 +1,6 @@
+[Parameters:]
+
+  - tempfile (Tempfile) -- The temporary file containing the body
+  - net_http_res (Net::HTTPResponse)
+  - request (RestMan::Request)
+  - start_time (Time)
