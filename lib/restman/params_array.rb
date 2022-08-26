@@ -4,21 +4,7 @@ module RestMan
   class ParamsArray
     include Enumerable
 
-    # @param array [Array<Array>] An array of parameter key,value pairs. These
-    #   pairs may be 2 element arrays [key, value] or single element hashes
-    #   {key => value}. They may also be single element arrays to represent a
-    #   key with no value.
-    #
-    # @example
-    #   >> ParamsArray.new([[:foo, 123], [:foo, 456], [:bar, 789]])
-    #   This will be encoded as "foo=123&foo=456&bar=789"
-    #
-    # @example
-    #   >> ParamsArray.new({foo: 123, bar: 456})
-    #   This is valid, but there's no reason not to just use the Hash directly
-    #   instead of a ParamsArray.
-    #
-    #
+    # :include: _doc/lib/restman/params_array/new.rdoc
     def initialize(array)
       @array = process_input(array)
     end
