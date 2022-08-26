@@ -10,4 +10,5 @@ group :development, :test do
   gem 'ruby-debug' if RUBY_PLATFORM == 'java'
   gem 'simplecov'
   gem 'simplecov-cobertura'
+  gem 'rubycritic'
 end

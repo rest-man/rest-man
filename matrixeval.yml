@@ -4,6 +4,7 @@ project_name: rest_man
 parallel_workers: number_of_processors
 commands:
   - jruby
+  - rubycritic
 #   - ps
 #   - top
 #   - an_additional_command
