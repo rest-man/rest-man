@@ -344,15 +344,7 @@ module RestMan
       url
     end
 
-    # Return a certificate store that can be used to validate certificates with
-    # the system certificate authorities. This will probably not do anything on
-    # OS X, which monkey patches OpenSSL in terrible ways to insert its own
-    # validation. On most *nix platforms, this will add the system certifcates
-    # using OpenSSL::X509::Store#set_default_paths. On Windows, this will use
-    # RestMan::Windows::RootCerts to look up the CAs trusted by the system.
-    #
-    # @return [OpenSSL::X509::Store]
-    #
+    # :include: _doc/lib/restman/request/default_ssl_cert_store.rdoc
     def self.default_ssl_cert_store
       cert_store = OpenSSL::X509::Store.new
       cert_store.set_default_paths
