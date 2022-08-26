@@ -1,0 +1,5 @@
+:call-seq:
+  default_headers -> Hash<Symbol, String>
+
+Default headers set by RestMan. In addition to these headers, servers
+will receive headers set by Net::HTTP, such as Accept-Encoding and Host.

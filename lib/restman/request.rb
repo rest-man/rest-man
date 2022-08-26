@@ -420,10 +420,7 @@ module RestMan
       end
     end
 
-    # Default headers set by RestMan. In addition to these headers, servers
-    # will receive headers set by Net::HTTP, such as Accept-Encoding and Host.
-    #
-    # @return [Hash<Symbol, String>]
+    # :include: _doc/lib/restman/request/default_headers.rdoc
     def default_headers
       {
         :accept => '*/*',
