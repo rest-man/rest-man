@@ -87,12 +87,7 @@ module RestMan
   }
 
 
-  # This is the base RestMan exception class. Rescue it if you want to
-  # catch any exception that your request might raise
-  # You can get the status code by e.http_code, or see anything about the
-  # response via e.response.
-  # For example, the entire result body (which is
-  # probably an HTML error page) is e.response.
+  # :include: _doc/lib/restman/exception.rdoc
   class Exception < RuntimeError
     attr_accessor :response
     attr_accessor :original_exception
