@@ -69,16 +69,7 @@ module RestMan
       history
     end
 
-    # Hash of cookies extracted from response headers.
-    #
-    # NB: This will return only cookies whose domain matches this request, and
-    # may not even return all of those cookies if there are duplicate names.
-    # Use the full cookie_jar for more nuanced access.
-    #
-    # @see #cookie_jar
-    #
-    # @return [Hash]
-    #
+    # :include: _doc/lib/restman/abstract_response/cookies.rdoc
     def cookies
       hash = {}
 
