@@ -5,6 +5,7 @@ parallel_workers: number_of_processors
 commands:
   - jruby
   - rubycritic
+  - rdoc
 #   - ps
 #   - top
 #   - an_additional_command

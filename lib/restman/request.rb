@@ -11,52 +11,7 @@ rescue LoadError
 end
 
 module RestMan
-  # This class is used internally by RestMan to send the request, but you can also
-  # call it directly if you'd like to use a method not supported by the
-  # main API.  For example:
-  #
-  #   RestMan::Request.execute(:method => :head, :url => 'http://example.com')
-  #
-  # Mandatory parameters:
-  # * :method
-  # * :url
-  # Optional parameters (have a look at ssl and/or uri for some explanations):
-  # * :headers a hash containing the request headers
-  # * :cookies may be a Hash{String/Symbol => String} of cookie values, an
-  #     Array<HTTP::Cookie>, or an HTTP::CookieJar containing cookies. These
-  #     will be added to a cookie jar before the request is sent.
-  # * :user and :password for basic auth, will be replaced by a user/password available in the :url
-  # * :block_response call the provided block with the HTTPResponse as parameter
-  # * :raw_response return a low-level RawResponse instead of a Response
-  # * :log Set the log for this request only, overriding RestMan.log, if
-  #      any.
-  # * :stream_log_percent (Only relevant with :raw_response => true) Customize
-  #     the interval at which download progress is logged. Defaults to every
-  #     10% complete.
-  # * :max_retries maximum number of times to retry an idempotent request (default to 1)
-  # * :max_redirects maximum number of redirections (default to 10)
-  # * :proxy An HTTP proxy URI to use for this request. Any value here
-  #   (including nil) will override RestMan.proxy.
-  # * :verify_ssl enable ssl verification, possible values are constants from
-  #     OpenSSL::SSL::VERIFY_*, defaults to OpenSSL::SSL::VERIFY_PEER
-  # * :read_timeout, :open_timeout and :write_timeout are how long to wait for a response and
-  #     to open a connection, in seconds. Pass nil to disable the timeout.
-  # * :timeout can be used to set: read_timeout, open_timeout and write_timeout
-  # * :keep_alive_timeout sets seconds to reuse the connection of the previous request. (default to 2 seconds)
-  # * :ssl_client_cert, :ssl_client_key, :ssl_ca_file, :ssl_ca_path,
-  #     :ssl_cert_store, :ssl_verify_callback, :ssl_verify_callback_warnings
-  # * :ssl_version specifies the SSL version for the underlying Net::HTTP connection
-  # * :ssl_min_version specifies the minimum SSL version for the underlying Net::HTTP connection
-  # * :ssl_max_version specifies the maximum SSL version for the underlying Net::HTTP connection
-  # * :ssl_timeout sets the SSL timeout seconds
-  # * :ssl_ciphers sets SSL ciphers for the connection. See
-  #     OpenSSL::SSL::SSLContext#ciphers=
-  # * :before_execution_proc a Proc to call before executing the request. This
-  #      proc, like procs from RestMan.before_execution_procs, will be
-  #      called with the HTTP request and request params.
-  # * :close_on_empty_response default to false
-  # * :local_host sets the local address for the outgoing connection
-  # * :local_port sets the local port for the outgoing connection
+  # :include: _doc/lib/restman/request.rdoc
   class Request
 
     attr_reader :method, :uri, :url, :headers, :payload, :proxy,
