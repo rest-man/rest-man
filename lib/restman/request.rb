@@ -209,13 +209,7 @@ module RestMan
       @cookie_jar
     end
 
-    # Render a Cookie HTTP request header from the contents of the @cookie_jar,
-    # or nil if the jar is empty.
-    #
-    # @see Request#cookie_jar
-    #
-    # @return [String, nil]
-    #
+    # :include: _doc/lib/restman/request/make_cookie_header.rdoc
     def make_cookie_header
       return nil if cookie_jar.nil?
 

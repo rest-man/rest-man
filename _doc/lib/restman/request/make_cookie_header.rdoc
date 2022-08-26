@@ -1,0 +1,8 @@
+:call-seq:
+  make_cookie_header -> string or nil
+ 
+Render a Cookie HTTP request header from the contents of the @cookie_jar,
+or nil if the jar is empty.
+
+[See Also]
+  - Request#cookie_jar
