@@ -1,0 +1,5 @@
+[Parameters:]
+
+  - net_http_res (Net::HTTPResponse)
+  - request (RestMan::Request)
+  - start_time (Time)

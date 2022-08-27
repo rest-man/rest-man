@@ -49,9 +49,7 @@ module RestMan
       @raw_headers ||= @net_http_res.to_hash
     end
 
-    # @param [Net::HTTPResponse] net_http_res
-    # @param [RestMan::Request] request
-    # @param [Time] start_time
+    # :include: _doc/lib/restman/abstract_response/response_set_vars.rdoc
     def response_set_vars(net_http_res, request, start_time)
       @net_http_res = net_http_res
       @request = request
