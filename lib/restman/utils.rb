@@ -29,13 +29,7 @@ module RestMan
       end
     end
 
-    # Parse a Content-Type like header.
-    #
-    # Return the main content-type and a hash of params.
-    #
-    # @param [String] line
-    # @return [Array(String, Hash)]
-    #
+    # :include: _doc/lib/restman/utils/cgi_parse_header.rdoc
     def self.cgi_parse_header(line)
       types = HTTP::Accept::MediaTypes.parse(line)
 
