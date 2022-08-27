@@ -9,23 +9,12 @@ module RestMan
       type_header = headers[:content_type]
       return nil unless type_header
 
-      # TODO: remove this hack once we drop support for Ruby 2.0
-      if RUBY_VERSION.start_with?('2.0')
-        _content_type, params = deprecated_cgi_parse_header(type_header)
-
-        if params.include?('charset')
-          return params.fetch('charset').gsub(/(\A["']*)|(["']*\z)/, '')
-        end
-
+      begin
+        _content_type, params = cgi_parse_header(type_header)
+      rescue HTTP::Accept::ParseError
+        return nil
       else
-
-        begin
-          _content_type, params = cgi_parse_header(type_header)
-        rescue HTTP::Accept::ParseError
-          return nil
-        else
-          params['charset']
-        end
+        params['charset']
       end
     end
 

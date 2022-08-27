@@ -1,36 +1,75 @@
 require_relative '_lib'
 
 describe RestMan::Utils do
+
   describe '.get_encoding_from_headers' do
-    it 'assumes no encoding by default for text' do
-      headers = {:content_type => 'text/plain'}
-      expect(RestMan::Utils.get_encoding_from_headers(headers)).
-        to eq nil
+
+    let(:get_encoding_from_headers) { RestMan::Utils.get_encoding_from_headers(headers) }
+
+    context 'with valid content_type' do
+      let(:headers) {{content_type: 'text/plain'}}
+
+      it 'assumes no encoding by default' do
+        expect(get_encoding_from_headers).to eq(nil)
+      end
     end
 
-    it 'returns nil on failures' do
-      expect(RestMan::Utils.get_encoding_from_headers(
-        {:content_type => 'blah'})).to eq nil
-      expect(RestMan::Utils.get_encoding_from_headers(
-        {})).to eq nil
-      expect(RestMan::Utils.get_encoding_from_headers(
-        {:content_type => 'foo; bar=baz'})).to eq nil
+    context 'with invalid content_type like "blah"' do
+      let(:headers) {{content_type: 'blah'}}
+
+      it 'return nil' do
+        expect(get_encoding_from_headers).to eq(nil)
+      end
     end
 
-    it 'handles various charsets' do
-      expect(RestMan::Utils.get_encoding_from_headers(
-        {:content_type => 'text/plain; charset=UTF-8'})).to eq 'UTF-8'
-      expect(RestMan::Utils.get_encoding_from_headers(
-        {:content_type => 'application/json; charset=ISO-8859-1'})).
-        to eq 'ISO-8859-1'
-      expect(RestMan::Utils.get_encoding_from_headers(
-        {:content_type => 'text/html; charset=windows-1251'})).
-        to eq 'windows-1251'
+    context 'with invalid content_type like "foo; bar=baz"' do
+      let(:headers) {{content_type: 'foo; bar=baz'}}
 
-      expect(RestMan::Utils.get_encoding_from_headers(
-        {:content_type => 'text/html; charset="UTF-16"'})).
-        to eq 'UTF-16'
+      it 'return nil' do
+        expect(get_encoding_from_headers).to eq(nil)
+      end
     end
+
+    context 'with invalid content_type like empty headers' do
+      let(:headers) {{}}
+
+      it 'return nil' do
+        expect(get_encoding_from_headers).to eq(nil)
+      end
+    end
+
+    context 'with valid content_type with charset UTF-8' do
+      let(:headers) {{content_type: 'text/plain; charset=UTF-8'}}
+
+      it 'return UTF-8' do
+        expect(get_encoding_from_headers).to eq('UTF-8')
+      end
+    end
+
+    context 'with valid content_type with charset ISO-8859-1' do
+      let(:headers) {{content_type: 'text/plain; charset=ISO-8859-1'}}
+
+      it 'return ISO-8859-1' do
+        expect(get_encoding_from_headers).to eq('ISO-8859-1')
+      end
+    end
+
+    context 'with valid content_type with charset windows-1251' do
+      let(:headers) {{content_type: 'text/plain; charset=windows-1251'}}
+
+      it 'return windows-1251' do
+        expect(get_encoding_from_headers).to eq('windows-1251')
+      end
+    end
+
+    context 'with valid content_type with charset UTF-16' do
+      let(:headers) {{content_type: 'text/plain; charset=UTF-16'}}
+
+      it 'return UTF-16' do
+        expect(get_encoding_from_headers).to eq('UTF-16')
+      end
+    end
+
   end
 
   describe '.cgi_parse_header' do
