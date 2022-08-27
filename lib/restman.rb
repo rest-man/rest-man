@@ -47,8 +47,7 @@ module RestMan
     Request.execute(:method => :options, :url => url, :headers => headers, &block)
   end
 
-  # A global proxy URL to use for all requests. This can be overridden on a
-  # per-request basis by passing `:proxy` to RestMan::Request.
+  # :include: _doc/lib/restman/proxy.rdoc
   def self.proxy
     @proxy ||= nil
   end
