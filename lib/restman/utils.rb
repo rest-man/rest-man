@@ -128,16 +128,7 @@ module RestMan
       }
     end
 
-    # Encode string for safe transport by URI or form encoding. This uses a CGI
-    # style escape, which transforms ` ` into `+` and various special
-    # characters into percent encoded forms.
-    #
-    # This calls URI.encode_www_form_component for the implementation. The only
-    # difference between this and CGI.escape is that it does not escape `*`.
-    # http://stackoverflow.com/questions/25085992/
-    #
-    # @see URI.encode_www_form_component
-    #
+    # :include: _doc/lib/restman/utils/escape.rdoc
     def self.escape(string)
       URI.encode_www_form_component(string)
     end
