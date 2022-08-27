@@ -119,7 +119,7 @@ module RestMan
     @@before_execution_procs << proc
   end
 
-  # Reset the procs to be called before each request is executed.
+  # :include: _doc/lib/restman/reset_before_execution_procs.rdoc
   def self.reset_before_execution_procs
     @@before_execution_procs = []
   end
