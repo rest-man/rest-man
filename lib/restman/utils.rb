@@ -87,76 +87,7 @@ module RestMan
       [key, pdict]
     end
 
-    # Serialize a ruby object into HTTP query string parameters.
-    #
-    # There is no standard for doing this, so we choose our own slightly
-    # idiosyncratic format. The output closely matches the format understood by
-    # Rails, Rack, and PHP.
-    #
-    # If you don't want handling of complex objects and only want to handle
-    # simple flat hashes, you may want to use `URI.encode_www_form` instead,
-    # which implements HTML5-compliant URL encoded form data.
-    #
-    # @param [Hash,ParamsArray] object The object to serialize
-    #
-    # @return [String] A string appropriate for use as an HTTP query string
-    #
-    # @see {flatten_params}
-    #
-    # @see URI.encode_www_form
-    #
-    # @see See also Object#to_query in ActiveSupport
-    # @see http://php.net/manual/en/function.http-build-query.php
-    #   http_build_query in PHP
-    # @see See also Rack::Utils.build_nested_query in Rack
-    #
-    # Notable differences from the ActiveSupport implementation:
-    #
-    # - Empty hash and empty array are treated the same as nil instead of being
-    #   omitted entirely from the output. Rather than disappearing, they will
-    #   appear to be nil instead.
-    #
-    # It's most common to pass a Hash as the object to serialize, but you can
-    # also use a ParamsArray if you want to be able to pass the same key with
-    # multiple values and not use the rack/rails array convention.
-    #
-    # @since 2.0.0
-    #
-    # @example Simple hashes
-    #   >> encode_query_string({foo: 123, bar: 456})
-    #   => 'foo=123&bar=456'
-    #
-    # @example Simple arrays
-    #   >> encode_query_string({foo: [1,2,3]})
-    #   => 'foo[]=1&foo[]=2&foo[]=3'
-    #
-    # @example Nested hashes
-    #   >> encode_query_string({outer: {foo: 123, bar: 456}})
-    #   => 'outer[foo]=123&outer[bar]=456'
-    #
-    # @example Deeply nesting
-    #   >> encode_query_string({coords: [{x: 1, y: 0}, {x: 2}, {x: 3}]})
-    #   => 'coords[][x]=1&coords[][y]=0&coords[][x]=2&coords[][x]=3'
-    #
-    # @example Null and empty values
-    #   >> encode_query_string({string: '', empty: nil, list: [], hash: {}})
-    #   => 'string=&empty&list&hash'
-    #
-    # @example Nested nulls
-    #   >> encode_query_string({foo: {string: '', empty: nil}})
-    #   => 'foo[string]=&foo[empty]'
-    #
-    # @example Multiple fields with the same name using ParamsArray
-    #   >> encode_query_string(RestMan::ParamsArray.new([[:foo, 1], [:foo, 2], [:foo, 3]]))
-    #   => 'foo=1&foo=2&foo=3'
-    #
-    # @example Nested ParamsArray
-    #   >> encode_query_string({foo: RestMan::ParamsArray.new([[:a, 1], [:a, 2]])})
-    #   => 'foo[a]=1&foo[a]=2'
-    #
-    #   >> encode_query_string(RestMan::ParamsArray.new([[:foo, {a: 1}], [:foo, {a: 2}]]))
-    #   => 'foo[a]=1&foo[a]=2'
-    #
+    # :include: _doc/lib/restman/utils/encode_query_string.rdoc
     def self.encode_query_string(object)
       flatten_params(object, true).map {|k, v| v.nil? ? k : "#{k}=#{v}" }.join('&')
     end
