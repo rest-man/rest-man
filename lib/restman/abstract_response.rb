@@ -119,8 +119,7 @@ module RestMan
       "#{code} #{STATUSES[code]} | #{(headers[:content_type] || '').gsub(/;.*$/, '')} #{size} bytes\n"
     end
 
-    # Follow a redirection response by making a new HTTP request to the
-    # redirection target.
+    # :include: _doc/lib/restman/abstract_response/follow_redirection.rdoc
     def follow_redirection(&block)
       _follow_redirection(request.args.dup, &block)
     end
