@@ -1,0 +1,10 @@
+Initialize a Response object. Because RestMan::Response is
+(unfortunately) a subclass of String for historical reasons,
+Response.create is the preferred initializer.
+
+[Parameters:]
+
+  - *body* (String, nil) -- The response body from the Net::HTTPResponse
+  - *net_http_res* (Net::HTTPResponse)
+  - *request* (RestMan::Request)
+  - *start_time* (Time)

@@ -1,0 +1,4 @@
+Base class for request timeouts.
+
+NB: Previous releases of rest-man would raise RequestTimeout both for
+HTTP 408 responses and for actual connection timeouts.

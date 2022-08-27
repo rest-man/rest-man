@@ -1,0 +1,4 @@
+:call-seq:
+  use_ssl? -> boolean
+
+Return true if the request URI will use HTTPS.

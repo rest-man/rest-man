@@ -6,13 +6,7 @@ module RestMan
 
     include AbstractResponse
 
-    # Return the HTTP response body.
-    #
-    # Future versions of RestMan will deprecate treating response objects
-    # directly as strings, so it will be necessary to call `.body`.
-    #
-    # @return [String]
-    #
+    # :include: _doc/lib/restman/response/body.rdoc
     def body
       # Benchmarking suggests that "#{self}" is fastest, and that caching the
       # body string in an instance variable doesn't make it enough faster to be
@@ -21,15 +15,11 @@ module RestMan
     end
 
     # Convert the HTTP response body to a pure String object.
-    #
-    # @return [String]
     def to_s
       body
     end
 
     # Convert the HTTP response body to a pure String object.
-    #
-    # @return [String]
     def to_str
       body
     end
@@ -38,14 +28,7 @@ module RestMan
       "<RestMan::Response #{code.inspect} #{body_truncated(10).inspect}>"
     end
 
-    # Initialize a Response object. Because RestMan::Response is
-    # (unfortunately) a subclass of String for historical reasons,
-    # Response.create is the preferred initializer.
-    #
-    # @param [String, nil] body The response body from the Net::HTTPResponse
-    # @param [Net::HTTPResponse] net_http_res
-    # @param [RestMan::Request] request
-    # @param [Time] start_time
+    # :include: _doc/lib/restman/response/create.rdoc
     def self.create(body, net_http_res, request, start_time=nil)
       result = self.new(body || '')
 
@@ -55,8 +38,7 @@ module RestMan
       result
     end
 
-    # Set the String encoding according to the 'Content-Type: charset' header,
-    # if possible.
+    # :include: _doc/lib/restman/response/fix_encoding.rdoc
     def self.fix_encoding(response)
       charset = RestMan::Utils.get_encoding_from_headers(response.headers)
       encoding = nil

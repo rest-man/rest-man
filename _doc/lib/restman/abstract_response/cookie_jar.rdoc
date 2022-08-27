@@ -1,0 +1,4 @@
+:call-seq:
+  cookie_jar -> HTTP::CookieJar
+
+Cookie jar extracted from response headers.

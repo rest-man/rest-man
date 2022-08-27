@@ -16,50 +16,7 @@ require File.dirname(__FILE__) + '/restman/params_array'
 require File.dirname(__FILE__) + '/restman/payload'
 require File.dirname(__FILE__) + '/restman/windows'
 
-# This module's static methods are the entry point for using the REST client.
-#
-#   # GET
-#   xml = RestMan.get 'http://example.com/resource'
-#   jpg = RestMan.get 'http://example.com/resource', :accept => 'image/jpg'
-#
-#   # authentication and SSL
-#   RestMan.get 'https://user:password@example.com/private/resource'
-#
-#   # POST or PUT with a hash sends parameters as a urlencoded form body
-#   RestMan.post 'http://example.com/resource', :param1 => 'one'
-#
-#   # nest hash parameters
-#   RestMan.post 'http://example.com/resource', :nested => { :param1 => 'one' }
-#
-#   # POST and PUT with raw payloads
-#   RestMan.post 'http://example.com/resource', 'the post body', :content_type => 'text/plain'
-#   RestMan.post 'http://example.com/resource.xml', xml_doc
-#   RestMan.put 'http://example.com/resource.pdf', File.read('my.pdf'), :content_type => 'application/pdf'
-#
-#   # DELETE
-#   RestMan.delete 'http://example.com/resource'
-#
-#   # retrieve the response http code and headers
-#   res = RestMan.get 'http://example.com/some.jpg'
-#   res.code                    # => 200
-#   res.headers[:content_type]  # => 'image/jpg'
-#
-#   # HEAD
-#   RestMan.head('http://example.com').headers
-#
-# To use with a proxy, just set RestMan.proxy to the proper http proxy:
-#
-#   RestMan.proxy = "http://proxy.example.com/"
-#
-# Or inherit the proxy from the environment:
-#
-#   RestMan.proxy = ENV['http_proxy']
-#
-# For live tests of RestMan, try using http://rest-test.heroku.com, which echoes back information about the rest call:
-#
-#   >> RestMan.put 'http://rest-test.heroku.com/resource', :foo => 'baz'
-#   => "PUT http://rest-test.heroku.com/resource with a 7 byte payload, content type application/x-www-form-urlencoded {\"foo\"=>\"baz\"}"
-#
+# :include: _doc/lib/restman.rdoc
 module RestMan
 
   def self.get(url, headers={}, &block)
@@ -90,8 +47,7 @@ module RestMan
     Request.execute(:method => :options, :url => url, :headers => headers, &block)
   end
 
-  # A global proxy URL to use for all requests. This can be overridden on a
-  # per-request basis by passing `:proxy` to RestMan::Request.
+  # :include: _doc/lib/restman/proxy.rdoc
   def self.proxy
     @proxy ||= nil
   end
@@ -101,24 +57,17 @@ module RestMan
     @proxy_set = true
   end
 
-  # Return whether RestMan.proxy was set explicitly. We use this to
-  # differentiate between no value being set and a value explicitly set to nil.
-  #
-  # @return [Boolean]
-  #
+  # :include: _doc/lib/restman/proxy_set?.rdoc
   def self.proxy_set?
     @proxy_set ||= false
   end
 
-  # Setup the log for RestMan calls.
-  # Value should be a logger but can can be stdout, stderr, or a filename.
-  # You can also configure logging by the environment variable RESTCLIENT_LOG.
+  # :include: _doc/lib/restman/log=.rdoc
   def self.log= log
     @@log = create_log log
   end
 
-  # Create a log that respond to << like a logger
-  # param can be 'stdout', 'stderr', a string (then we will log to that file) or a logger (then we return it)
+  # :include: _doc/lib/restman/create_log.rdoc
   def self.create_log param
     if param
       if param.is_a? String
@@ -164,14 +113,13 @@ module RestMan
 
   @@before_execution_procs = []
 
-  # Add a Proc to be called before each request in executed.
-  # The proc parameters will be the http request and the request params.
+  # :include: _doc/lib/restman/add_before_execution_proc.rdoc
   def self.add_before_execution_proc &proc
     raise ArgumentError.new('block is required') unless proc
     @@before_execution_procs << proc
   end
 
-  # Reset the procs to be called before each request is executed.
+  # :include: _doc/lib/restman/reset_before_execution_procs.rdoc
   def self.reset_before_execution_procs
     @@before_execution_procs = []
   end

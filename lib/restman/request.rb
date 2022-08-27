@@ -11,52 +11,7 @@ rescue LoadError
 end
 
 module RestMan
-  # This class is used internally by RestMan to send the request, but you can also
-  # call it directly if you'd like to use a method not supported by the
-  # main API.  For example:
-  #
-  #   RestMan::Request.execute(:method => :head, :url => 'http://example.com')
-  #
-  # Mandatory parameters:
-  # * :method
-  # * :url
-  # Optional parameters (have a look at ssl and/or uri for some explanations):
-  # * :headers a hash containing the request headers
-  # * :cookies may be a Hash{String/Symbol => String} of cookie values, an
-  #     Array<HTTP::Cookie>, or an HTTP::CookieJar containing cookies. These
-  #     will be added to a cookie jar before the request is sent.
-  # * :user and :password for basic auth, will be replaced by a user/password available in the :url
-  # * :block_response call the provided block with the HTTPResponse as parameter
-  # * :raw_response return a low-level RawResponse instead of a Response
-  # * :log Set the log for this request only, overriding RestMan.log, if
-  #      any.
-  # * :stream_log_percent (Only relevant with :raw_response => true) Customize
-  #     the interval at which download progress is logged. Defaults to every
-  #     10% complete.
-  # * :max_retries maximum number of times to retry an idempotent request (default to 1)
-  # * :max_redirects maximum number of redirections (default to 10)
-  # * :proxy An HTTP proxy URI to use for this request. Any value here
-  #   (including nil) will override RestMan.proxy.
-  # * :verify_ssl enable ssl verification, possible values are constants from
-  #     OpenSSL::SSL::VERIFY_*, defaults to OpenSSL::SSL::VERIFY_PEER
-  # * :read_timeout, :open_timeout and :write_timeout are how long to wait for a response and
-  #     to open a connection, in seconds. Pass nil to disable the timeout.
-  # * :timeout can be used to set: read_timeout, open_timeout and write_timeout
-  # * :keep_alive_timeout sets seconds to reuse the connection of the previous request. (default to 2 seconds)
-  # * :ssl_client_cert, :ssl_client_key, :ssl_ca_file, :ssl_ca_path,
-  #     :ssl_cert_store, :ssl_verify_callback, :ssl_verify_callback_warnings
-  # * :ssl_version specifies the SSL version for the underlying Net::HTTP connection
-  # * :ssl_min_version specifies the minimum SSL version for the underlying Net::HTTP connection
-  # * :ssl_max_version specifies the maximum SSL version for the underlying Net::HTTP connection
-  # * :ssl_timeout sets the SSL timeout seconds
-  # * :ssl_ciphers sets SSL ciphers for the connection. See
-  #     OpenSSL::SSL::SSLContext#ciphers=
-  # * :before_execution_proc a Proc to call before executing the request. This
-  #      proc, like procs from RestMan.before_execution_procs, will be
-  #      called with the HTTP request and request params.
-  # * :close_on_empty_response default to false
-  # * :local_host sets the local address for the outgoing connection
-  # * :local_port sets the local port for the outgoing connection
+  # :include: _doc/lib/restman/request.rdoc
   class Request
 
     attr_reader :method, :uri, :url, :headers, :payload, :proxy,
@@ -201,28 +156,12 @@ module RestMan
       end
     end
 
-    # Return true if the request URI will use HTTPS.
-    #
-    # @return [Boolean]
-    #
+    # :include: _doc/lib/restman/request/use_ssl.rdoc
     def use_ssl?
       uri.is_a?(URI::HTTPS)
     end
 
-    # Extract the query parameters and append them to the url
-    #
-    # Look through the headers hash for a :params option (case-insensitive,
-    # may be string or symbol). If present and the value is a Hash or
-    # RestMan::ParamsArray, *delete* the key/value pair from the headers
-    # hash and encode the value into a query string. Append this query string
-    # to the URL and return the resulting URL.
-    #
-    # @param [String] url
-    # @param [Hash] headers An options/headers hash to process. Mutation
-    #   warning: the params key may be removed if present!
-    #
-    # @return [String] resulting url with query string
-    #
+    # :include: _doc/lib/restman/request/process_url_params.rdoc
     def process_url_params(url, headers)
       url_params = nil
 
@@ -254,15 +193,7 @@ module RestMan
       end
     end
 
-    # Render a hash of key => value pairs for cookies in the Request#cookie_jar
-    # that are valid for the Request#uri. This will not necessarily include all
-    # cookies if there are duplicate keys. It's safer to use the cookie_jar
-    # directly if that's a concern.
-    #
-    # @see Request#cookie_jar
-    #
-    # @return [Hash]
-    #
+    # :include: _doc/lib/restman/request/cookies.rdoc
     def cookies
       hash = {}
 
@@ -273,18 +204,12 @@ module RestMan
       hash
     end
 
-    # @return [HTTP::CookieJar]
+    # :include: _doc/lib/restman/request/cookie_jar.rdoc
     def cookie_jar
       @cookie_jar
     end
 
-    # Render a Cookie HTTP request header from the contents of the @cookie_jar,
-    # or nil if the jar is empty.
-    #
-    # @see Request#cookie_jar
-    #
-    # @return [String, nil]
-    #
+    # :include: _doc/lib/restman/request/make_cookie_header.rdoc
     def make_cookie_header
       return nil if cookie_jar.nil?
 
@@ -294,54 +219,7 @@ module RestMan
       return HTTP::Cookie.cookie_value(arr)
     end
 
-    # Process cookies passed as hash or as HTTP::CookieJar. For backwards
-    # compatibility, these may be passed as a :cookies option masquerading
-    # inside the headers hash. To avoid confusion, if :cookies is passed in
-    # both headers and Request#initialize, raise an error.
-    #
-    # :cookies may be a:
-    # - Hash{String/Symbol => String}
-    # - Array<HTTP::Cookie>
-    # - HTTP::CookieJar
-    #
-    # Passing as a hash:
-    #   Keys may be symbols or strings. Values must be strings.
-    #   Infer the domain name from the request URI and allow subdomains (as
-    #   though '.example.com' had been set in a Set-Cookie header). Assume a
-    #   path of '/'.
-    #
-    #     RestMan::Request.new(url: 'http://example.com', method: :get,
-    #       :cookies => {:foo => 'Value', 'bar' => '123'}
-    #     )
-    #
-    # results in cookies as though set from the server by:
-    #     Set-Cookie: foo=Value; Domain=.example.com; Path=/
-    #     Set-Cookie: bar=123; Domain=.example.com; Path=/
-    #
-    # which yields a client cookie header of:
-    #     Cookie: foo=Value; bar=123
-    #
-    # Passing as HTTP::CookieJar, which will be passed through directly:
-    #
-    #     jar = HTTP::CookieJar.new
-    #     jar.add(HTTP::Cookie.new('foo', 'Value', domain: 'example.com',
-    #                              path: '/', for_domain: false))
-    #
-    #     RestMan::Request.new(..., :cookies => jar)
-    #
-    # @param [URI::HTTP] uri The URI for the request. This will be used to
-    # infer the domain name for cookies passed as strings in a hash. To avoid
-    # this implicit behavior, pass a full cookie jar or use HTTP::Cookie hash
-    # values.
-    # @param [Hash] headers The headers hash from which to pull the :cookies
-    #   option. MUTATION NOTE: This key will be deleted from the hash if
-    #   present.
-    # @param [Hash] args The options passed to Request#initialize. This hash
-    #   will be used as another potential source for the :cookies key.
-    #   These args will not be mutated.
-    #
-    # @return [HTTP::CookieJar] A cookie jar containing the parsed cookies.
-    #
+    # :include: _doc/lib/restman/request/process_cookie_args.rdoc
     def process_cookie_args!(uri, headers, args)
 
       # Avoid ambiguity in whether options from headers or options from
@@ -391,26 +269,7 @@ module RestMan
       jar
     end
 
-    # Generate headers for use by a request. Header keys will be stringified
-    # using `#stringify_headers` to normalize them as capitalized strings.
-    #
-    # The final headers consist of:
-    #   - default headers from #default_headers
-    #   - user_headers provided here
-    #   - headers from the payload object (e.g. Content-Type, Content-Lenth)
-    #   - cookie headers from #make_cookie_header
-    #
-    # BUG: stringify_headers does not alter the capitalization of headers that
-    # are passed as strings, it only normalizes those passed as symbols. This
-    # behavior will probably remain for a while for compatibility, but it means
-    # that the warnings that attempt to detect accidental header overrides may
-    # not always work.
-    # https://github.com/rest-man/rest-man/issues/599
-    #
-    # @param [Hash] user_headers User-provided headers to include
-    #
-    # @return [Hash<String, String>] A hash of HTTP headers => values
-    #
+    # :include: _doc/lib/restman/request/make_headers.rdoc
     def make_headers(user_headers)
       headers = stringify_headers(default_headers).merge(stringify_headers(user_headers))
 
@@ -431,13 +290,7 @@ module RestMan
       headers
     end
 
-    # The proxy URI for this request. If `:proxy` was provided on this request,
-    # use it over `RestMan.proxy`.
-    #
-    # Return false if a proxy was explicitly set and is falsy.
-    #
-    # @return [URI, false, nil]
-    #
+    # :include: _doc/lib/restman/request/proxy_uri.rdoc
     def proxy_uri
       if defined?(@proxy)
         if @proxy
@@ -485,30 +338,13 @@ module RestMan
       end
     end
 
-    # Normalize a URL by adding a protocol if none is present.
-    #
-    # If the string has no HTTP-like scheme (i.e. scheme followed by '//'), a
-    # scheme of 'http' will be added. This mimics the behavior of browsers and
-    # user agents like cURL.
-    #
-    # @param [String] url A URL string.
-    #
-    # @return [String]
-    #
+    # :include: _doc/lib/restman/request/normalize_url.rdoc
     def normalize_url(url)
       url = 'http://' + url unless url.match(%r{\A[a-z][a-z0-9+.-]*://}i)
       url
     end
 
-    # Return a certificate store that can be used to validate certificates with
-    # the system certificate authorities. This will probably not do anything on
-    # OS X, which monkey patches OpenSSL in terrible ways to insert its own
-    # validation. On most *nix platforms, this will add the system certifcates
-    # using OpenSSL::X509::Store#set_default_paths. On Windows, this will use
-    # RestMan::Windows::RootCerts to look up the CAs trusted by the system.
-    #
-    # @return [OpenSSL::X509::Store]
-    #
+    # :include: _doc/lib/restman/request/default_ssl_cert_store.rdoc
     def self.default_ssl_cert_store
       cert_store = OpenSSL::X509::Store.new
       cert_store.set_default_paths
@@ -559,13 +395,7 @@ module RestMan
       log << out.join(', ') + "\n"
     end
 
-    # Return a hash of headers whose keys are capitalized strings
-    #
-    # BUG: stringify_headers does not fix the capitalization of headers that
-    # are already Strings. Leaving this behavior as is for now for
-    # backwards compatibility.
-    # https://github.com/rest-man/rest-man/issues/599
-    #
+    # :include: _doc/lib/restman/request/stringify_headers.rdoc
     def stringify_headers headers
       headers.inject({}) do |result, (key, value)|
         if key.is_a? Symbol
@@ -590,10 +420,7 @@ module RestMan
       end
     end
 
-    # Default headers set by RestMan. In addition to these headers, servers
-    # will receive headers set by Net::HTTP, such as Accept-Encoding and Host.
-    #
-    # @return [Hash<Symbol, String>]
+    # :include: _doc/lib/restman/request/default_headers.rdoc
     def default_headers
       {
         :accept => '*/*',
@@ -603,16 +430,7 @@ module RestMan
 
     private
 
-    # Parse the `@url` string into a URI object and save it as
-    # `@uri`. Also save any basic auth user or password as @user and @password.
-    # If no auth info was passed, check for credentials in a Netrc file.
-    #
-    # @param [String] url A URL string.
-    #
-    # @return [URI]
-    #
-    # @raise URI::InvalidURIError on invalid URIs
-    #
+    # :include: _doc/lib/restman/request/parse_url_with_auth.rdoc
     def parse_url_with_auth!(url)
       uri = URI.parse(url)
 
@@ -643,17 +461,7 @@ module RestMan
       warned
     end
 
-    # Parse a method and return a normalized string version.
-    #
-    # Raise ArgumentError if the method is falsy, but otherwise do no
-    # validation.
-    #
-    # @param method [String, Symbol]
-    #
-    # @return [String]
-    #
-    # @see net_http_request_class
-    #
+    # :include: _doc/lib/restman/request/normalize_method.rdoc
     def normalize_method(method)
       raise ArgumentError.new('must pass :method') unless method
       method.to_s.downcase
@@ -825,8 +633,7 @@ module RestMan
       tf
     end
 
-    # @param res The Net::HTTP response object
-    # @param start_time [Time] Time of request start
+    # :include: _doc/lib/restman/request/process_result.rdoc
     def process_result(res, start_time, tempfile=nil, &block)
       if @raw_response
         unless tempfile
@@ -851,22 +658,7 @@ module RestMan
       URI.const_defined?(:Parser) ? URI::Parser.new : URI
     end
 
-    # Given a MIME type or file extension, return either a MIME type or, if
-    # none is found, the input unchanged.
-    #
-    #     >> maybe_convert_extension('json')
-    #     => 'application/json'
-    #
-    #     >> maybe_convert_extension('unknown')
-    #     => 'unknown'
-    #
-    #     >> maybe_convert_extension('application/xml')
-    #     => 'application/xml'
-    #
-    # @param ext [String]
-    #
-    # @return [String]
-    #
+    # :include: _doc/lib/restman/request/maybe_convert_extension.rdoc
     def maybe_convert_extension(ext)
       unless ext =~ /\A[a-zA-Z0-9_@-]+\z/
         # Don't look up strings unless they look like they could be a file

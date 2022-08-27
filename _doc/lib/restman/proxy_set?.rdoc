@@ -1,0 +1,5 @@
+:call-seq:
+  proxy_set? -> boolean
+
+Return whether RestMan.proxy was set explicitly. We use this to
+differentiate between no value being set and a value explicitly set to nil.

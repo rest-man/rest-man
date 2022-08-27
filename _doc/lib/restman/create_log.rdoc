@@ -1,0 +1,2 @@
+Create a log that respond to << like a logger
+param can be 'stdout', 'stderr', a string (then we will log to that file) or a logger (then we return it)

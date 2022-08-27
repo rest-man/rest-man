@@ -1,19 +1,6 @@
 module RestMan
 
-  # Hash of HTTP status code => message.
-  #
-  # 1xx: Informational - Request received, continuing process
-  # 2xx: Success - The action was successfully received, understood, and
-  #      accepted
-  # 3xx: Redirection - Further action must be taken in order to complete the
-  #      request
-  # 4xx: Client Error - The request contains bad syntax or cannot be fulfilled
-  # 5xx: Server Error - The server failed to fulfill an apparently valid
-  #      request
-  #
-  # @see
-  #   http://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
-  #
+  # :include: _doc/lib/restman/exceptions/statuses.rdoc
   STATUSES = {100 => 'Continue',
               101 => 'Switching Protocols',
               102 => 'Processing', #WebDAV
@@ -100,12 +87,7 @@ module RestMan
   }
 
 
-  # This is the base RestMan exception class. Rescue it if you want to
-  # catch any exception that your request might raise
-  # You can get the status code by e.http_code, or see anything about the
-  # response via e.response.
-  # For example, the entire result body (which is
-  # probably an HTML error page) is e.response.
+  # :include: _doc/lib/restman/exception.rdoc
   class Exception < RuntimeError
     attr_accessor :response
     attr_accessor :original_exception
@@ -163,11 +145,7 @@ module RestMan
     end
   end
 
-  # RestMan exception classes. TODO: move all exceptions into this module.
-  #
-  # We will a create an exception for each status code, see
-  # http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
-  #
+  # :include: _doc/lib/restman/exceptions.rdoc
   module Exceptions
     # Map http status codes to the corresponding exception class
     EXCEPTIONS_MAP = {}
@@ -195,10 +173,7 @@ module RestMan
     # EXCEPTIONS_MAP is under Exceptions, but we depend on
     # RestMan::RequestTimeout below.
 
-    # Base class for request timeouts.
-    #
-    # NB: Previous releases of rest-man would raise RequestTimeout both for
-    # HTTP 408 responses and for actual connection timeouts.
+    # :include: _doc/lib/restman/exceptions/timeout.rdoc
     class Timeout < RestMan::RequestTimeout
       def initialize(message=nil, original_exception=nil)
         super(nil, nil)

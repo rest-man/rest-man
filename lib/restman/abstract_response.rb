@@ -39,8 +39,7 @@ module RestMan
       @history ||= request.redirection_history || []
     end
 
-    # A hash of the headers, beautified with symbols and underscores.
-    # e.g. "Content-type" will become :content_type.
+    # :include: _doc/lib/restman/abstract_response/headers.rdoc
     def headers
       @headers ||= AbstractResponse.beautify_headers(@net_http_res.to_hash)
     end
@@ -50,9 +49,7 @@ module RestMan
       @raw_headers ||= @net_http_res.to_hash
     end
 
-    # @param [Net::HTTPResponse] net_http_res
-    # @param [RestMan::Request] request
-    # @param [Time] start_time
+    # :include: _doc/lib/restman/abstract_response/response_set_vars.rdoc
     def response_set_vars(net_http_res, request, start_time)
       @net_http_res = net_http_res
       @request = request
@@ -69,16 +66,7 @@ module RestMan
       history
     end
 
-    # Hash of cookies extracted from response headers.
-    #
-    # NB: This will return only cookies whose domain matches this request, and
-    # may not even return all of those cookies if there are duplicate names.
-    # Use the full cookie_jar for more nuanced access.
-    #
-    # @see #cookie_jar
-    #
-    # @return [Hash]
-    #
+    # :include: _doc/lib/restman/abstract_response/cookies.rdoc
     def cookies
       hash = {}
 
@@ -89,10 +77,7 @@ module RestMan
       hash
     end
 
-    # Cookie jar extracted from response headers.
-    #
-    # @return [HTTP::CookieJar]
-    #
+    # :include: _doc/lib/restman/abstract_response/cookie_jar.rdoc
     def cookie_jar
       return @cookie_jar if defined?(@cookie_jar) && @cookie_jar
 
@@ -104,16 +89,7 @@ module RestMan
       @cookie_jar = jar
     end
 
-    # Return the default behavior corresponding to the response code:
-    #
-    # For 20x status codes: return the response itself
-    #
-    # For 30x status codes:
-    #   301, 302, 307: redirect GET / HEAD if there is a Location header
-    #   303: redirect, changing method to GET, if there is a Location header
-    #
-    # For all other responses, raise a response exception
-    #
+    # :include: _doc/lib/restman/abstract_response/return.rdoc
     def return!(&block)
       case code
       when 200..207
@@ -143,14 +119,12 @@ module RestMan
       "#{code} #{STATUSES[code]} | #{(headers[:content_type] || '').gsub(/;.*$/, '')} #{size} bytes\n"
     end
 
-    # Follow a redirection response by making a new HTTP request to the
-    # redirection target.
+    # :include: _doc/lib/restman/abstract_response/follow_redirection.rdoc
     def follow_redirection(&block)
       _follow_redirection(request.args.dup, &block)
     end
 
-    # Follow a redirection response, but change the HTTP method to GET and drop
-    # the payload from the original request.
+    # :include: _doc/lib/restman/abstract_response/follow_get_redirection.rdoc
     def follow_get_redirection(&block)
       new_args = request.args.dup
       new_args[:method] = :get
@@ -159,27 +133,7 @@ module RestMan
       _follow_redirection(new_args, &block)
     end
 
-    # Convert headers hash into canonical form.
-    #
-    # Header names will be converted to lowercase symbols with underscores
-    # instead of hyphens.
-    #
-    # Headers specified multiple times will be joined by comma and space,
-    # except for Set-Cookie, which will always be an array.
-    #
-    # Per RFC 2616, if a server sends multiple headers with the same key, they
-    # MUST be able to be joined into a single header by a comma. However,
-    # Set-Cookie (RFC 6265) cannot because commas are valid within cookie
-    # definitions. The newer RFC 7230 notes (3.2.2) that Set-Cookie should be
-    # handled as a special case.
-    #
-    # http://tools.ietf.org/html/rfc2616#section-4.2
-    # http://tools.ietf.org/html/rfc7230#section-3.2.2
-    # http://tools.ietf.org/html/rfc6265
-    #
-    # @param headers [Hash]
-    # @return [Hash]
-    #
+    # :include: _doc/lib/restman/abstract_response/beautify_headers.rdoc
     def self.beautify_headers(headers)
       headers.inject({}) do |out, (key, value)|
         key_sym = key.tr('-', '_').downcase.to_sym
@@ -197,12 +151,7 @@ module RestMan
 
     private
 
-    # Follow a redirection
-    #
-    # @param new_args [Hash] Start with this hash of arguments for the
-    #   redirection request. The hash will be mutated, so be sure to dup any
-    #   existing hash that should not be modified.
-    #
+    # :include: _doc/lib/restman/abstract_response/_follow_redirection.rdoc
     def _follow_redirection(new_args, &block)
 
       # parse location header and merge into existing URL

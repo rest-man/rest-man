@@ -1,0 +1,55 @@
+:call-seq:
+  process_cookie_args!(uri, headers, args) -> HTTP::CookieJar
+
+Process cookies passed as hash or as HTTP::CookieJar. For backwards
+compatibility, these may be passed as a :cookies option masquerading
+inside the headers hash. To avoid confusion, if :cookies is passed in
+both headers and Request#initialize, raise an error.
+
+[cookies may be a:]
+
+  - Hash{String/Symbol => String}
+  - Array<HTTP::Cookie>
+  - HTTP::CookieJar
+
+Passing as a hash:
+  Keys may be symbols or strings. Values must be strings.
+  Infer the domain name from the request URI and allow subdomains (as
+  though '.example.com' had been set in a Set-Cookie header). Assume a
+  path of '/'.
+
+    RestMan::Request.new(url: 'http://example.com', method: :get,
+      :cookies => {:foo => 'Value', 'bar' => '123'}
+    )
+
+results in cookies as though set from the server by:
+    Set-Cookie: foo=Value; Domain=.example.com; Path=/
+    Set-Cookie: bar=123; Domain=.example.com; Path=/
+
+which yields a client cookie header of:
+    Cookie: foo=Value; bar=123
+
+Passing as HTTP::CookieJar, which will be passed through directly:
+
+    jar = HTTP::CookieJar.new
+    jar.add(HTTP::Cookie.new('foo', 'Value', domain: 'example.com',
+                            path: '/', for_domain: false))
+
+    RestMan::Request.new(..., :cookies => jar)
+
+[Parameters:]
+
+  - *uri* (URI::HTTP) -- The URI for the request. This will be used to
+    infer the domain name for cookies passed as strings in a hash. To avoid
+    this implicit behavior, pass a full cookie jar or use HTTP::Cookie hash
+    values.
+  - *headers* (Hash) -- The headers hash from which to pull the :cookies
+    option. MUTATION NOTE: This key will be deleted from the hash if
+    present.
+  - *args* (Hash) -- The options passed to Request#initialize. This hash
+    will be used as another potential source for the :cookies key.
+    These args will not be mutated.
+
+[Returns:]
+
+  - (HTTP::CookieJar) -- A cookie jar containing the parsed cookies.

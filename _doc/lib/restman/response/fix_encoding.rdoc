@@ -1,0 +1,2 @@
+Set the String encoding according to the 'Content-Type: charset' header,
+if possible.

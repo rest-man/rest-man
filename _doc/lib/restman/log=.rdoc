@@ -1,0 +1,3 @@
+Setup the log for RestMan calls.
+Value should be a logger but can can be stdout, stderr, or a filename.
+You can also configure logging by the environment variable RESTCLIENT_LOG.

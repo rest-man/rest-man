@@ -2,28 +2,19 @@ require 'rbconfig'
 
 module RestMan
   module Platform
-    # Return true if we are running on a darwin-based Ruby platform. This will
-    # be false for jruby even on OS X.
-    #
-    # @return [Boolean]
+    # :include: _doc/lib/restman/platform/mac_mri?.rdoc
     def self.mac_mri?
       RUBY_PLATFORM.include?('darwin')
     end
 
-    # Return true if we are running on Windows.
-    #
-    # @return [Boolean]
-    #
+    # :include: _doc/lib/restman/platform/windows?.rdoc
     def self.windows?
       # Ruby only sets File::ALT_SEPARATOR on Windows, and the Ruby standard
       # library uses that to test what platform it's on.
       !!File::ALT_SEPARATOR
     end
 
-    # Return true if we are running on jruby.
-    #
-    # @return [Boolean]
-    #
+    # :include: _doc/lib/restman/platform/jruby?.rdoc
     def self.jruby?
       # defined on mri >= 1.9
       RUBY_ENGINE == 'jruby'

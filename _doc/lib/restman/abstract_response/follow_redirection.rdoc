@@ -1,0 +1,2 @@
+Follow a redirection response by making a new HTTP request to the
+redirection target.

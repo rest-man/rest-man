@@ -1,33 +1,10 @@
 module RestMan
 
-  # The ParamsArray class is used to represent an ordered list of [key, value]
-  # pairs. Use this when you need to include a key multiple times or want
-  # explicit control over parameter ordering.
-  #
-  # Most of the request payload & parameter functions normally accept a Hash of
-  # keys => values, which does not allow for duplicated keys.
-  #
-  # @see RestMan::Utils.encode_query_string
-  # @see RestMan::Utils.flatten_params
-  #
+  # :include: _doc/lib/restman/params_array.rdoc
   class ParamsArray
     include Enumerable
 
-    # @param array [Array<Array>] An array of parameter key,value pairs. These
-    #   pairs may be 2 element arrays [key, value] or single element hashes
-    #   {key => value}. They may also be single element arrays to represent a
-    #   key with no value.
-    #
-    # @example
-    #   >> ParamsArray.new([[:foo, 123], [:foo, 456], [:bar, 789]])
-    #   This will be encoded as "foo=123&foo=456&bar=789"
-    #
-    # @example
-    #   >> ParamsArray.new({foo: 123, bar: 456})
-    #   This is valid, but there's no reason not to just use the Hash directly
-    #   instead of a ParamsArray.
-    #
-    #
+    # :include: _doc/lib/restman/params_array/new.rdoc
     def initialize(array)
       @array = process_input(array)
     end
@@ -46,11 +23,7 @@ module RestMan
       array.map {|v| process_pair(v) }
     end
 
-    # A pair may be:
-    # - A single element hash, e.g. {foo: 'bar'}
-    # - A two element array, e.g. ['foo', 'bar']
-    # - A one element array, e.g. ['foo']
-    #
+    # :include: _doc/lib/restman/params_array/process_pair.rdoc
     def process_pair(pair)
       case pair
       when Hash

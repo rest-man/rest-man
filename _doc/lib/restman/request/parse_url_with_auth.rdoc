@@ -1,0 +1,10 @@
+:call-seq:
+  parse_url_with_auth(url) -> URI
+ 
+Parse the `@url` string into a URI object and save it as
+`@uri`. Also save any basic auth user or password as @user and @password.
+If no auth info was passed, check for credentials in a Netrc file.
+
+[Raise errors:]
+
+  - URI::InvalidURIError on invalid URIs

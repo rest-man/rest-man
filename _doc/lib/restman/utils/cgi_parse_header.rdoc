@@ -1,0 +1,6 @@
+:call-seq:
+  cgi_parse_header(line) -> Array(String, Hash)
+
+Parse a Content-Type like header.
+
+Return the main content-type and a hash of params.

@@ -1,0 +1,15 @@
+:call-seq:
+  normalize_method(method) -> string
+
+Parse a method and return a normalized string version.
+
+Raise ArgumentError if the method is falsy, but otherwise do no
+validation.
+
+[Parameters:]
+
+  - *method* (String, Symbol)
+
+[See Also:]
+
+  - net_http_request_class

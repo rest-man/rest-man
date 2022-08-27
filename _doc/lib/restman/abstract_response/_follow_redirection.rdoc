@@ -1,0 +1,7 @@
+Follow a redirection
+
+[Parameters:]
+
+  - *new_args* (Hash) -- Start with this hash of arguments for the
+    redirection request. The hash will be mutated, so be sure to dup any
+    existing hash that should not be modified.

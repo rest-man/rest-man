@@ -1,0 +1,2 @@
+A hash of the headers, beautified with symbols and underscores.
+e.g. "Content-type" will become :content_type.

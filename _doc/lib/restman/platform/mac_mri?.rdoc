@@ -1,0 +1,5 @@
+:call-seq:
+  mac_mri? -> boolean
+
+# Return true if we are running on a darwin-based Ruby platform. This will
+# be false for jruby even on OS X.
