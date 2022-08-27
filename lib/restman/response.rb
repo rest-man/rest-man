@@ -38,8 +38,7 @@ module RestMan
       result
     end
 
-    # Set the String encoding according to the 'Content-Type: charset' header,
-    # if possible.
+    # :include: _doc/lib/restman/response/fix_encoding.rdoc
     def self.fix_encoding(response)
       charset = RestMan::Utils.get_encoding_from_headers(response.headers)
       encoding = nil
