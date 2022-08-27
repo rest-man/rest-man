@@ -58,11 +58,7 @@ module RestMan
     @proxy_set = true
   end
 
-  # Return whether RestMan.proxy was set explicitly. We use this to
-  # differentiate between no value being set and a value explicitly set to nil.
-  #
-  # @return [Boolean]
-  #
+  # :include: _doc/lib/restman/proxy_set?.rdoc
   def self.proxy_set?
     @proxy_set ||= false
   end
