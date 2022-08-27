@@ -2,10 +2,7 @@ require 'rbconfig'
 
 module RestMan
   module Platform
-    # Return true if we are running on a darwin-based Ruby platform. This will
-    # be false for jruby even on OS X.
-    #
-    # @return [Boolean]
+    # :include: _doc/lib/restman/platform/mac_mri?.rdoc
     def self.mac_mri?
       RUBY_PLATFORM.include?('darwin')
     end
