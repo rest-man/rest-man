@@ -1,0 +1,25 @@
+Construct a subresource, preserving authentication.
+
+Example:
+
+  site = RestMan::Resource.new('http://example.com', 'adam', 'mypasswd')
+  site['posts/1/comments'].post 'Good article.', :content_type => 'text/plain'
+
+This is especially useful if you wish to define your site in one place and
+call it in multiple locations:
+
+  def orders
+    RestMan::Resource.new('http://example.com/orders', 'admin', 'mypasswd')
+  end
+
+  orders.get                     # GET http://example.com/orders
+  orders['1'].get                # GET http://example.com/orders/1
+  orders['1/items'].delete       # DELETE http://example.com/orders/1/items
+
+Nest resources as far as you want:
+
+  site = RestMan::Resource.new('http://example.com')
+  posts = site['posts']
+  first_post = posts['1']
+  comments = first_post['comments']
+  comments.post 'Hello', :content_type => 'text/plain'
