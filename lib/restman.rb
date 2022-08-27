@@ -16,50 +16,7 @@ require File.dirname(__FILE__) + '/restman/params_array'
 require File.dirname(__FILE__) + '/restman/payload'
 require File.dirname(__FILE__) + '/restman/windows'
 
-# This module's static methods are the entry point for using the REST client.
-#
-#   # GET
-#   xml = RestMan.get 'http://example.com/resource'
-#   jpg = RestMan.get 'http://example.com/resource', :accept => 'image/jpg'
-#
-#   # authentication and SSL
-#   RestMan.get 'https://user:password@example.com/private/resource'
-#
-#   # POST or PUT with a hash sends parameters as a urlencoded form body
-#   RestMan.post 'http://example.com/resource', :param1 => 'one'
-#
-#   # nest hash parameters
-#   RestMan.post 'http://example.com/resource', :nested => { :param1 => 'one' }
-#
-#   # POST and PUT with raw payloads
-#   RestMan.post 'http://example.com/resource', 'the post body', :content_type => 'text/plain'
-#   RestMan.post 'http://example.com/resource.xml', xml_doc
-#   RestMan.put 'http://example.com/resource.pdf', File.read('my.pdf'), :content_type => 'application/pdf'
-#
-#   # DELETE
-#   RestMan.delete 'http://example.com/resource'
-#
-#   # retrieve the response http code and headers
-#   res = RestMan.get 'http://example.com/some.jpg'
-#   res.code                    # => 200
-#   res.headers[:content_type]  # => 'image/jpg'
-#
-#   # HEAD
-#   RestMan.head('http://example.com').headers
-#
-# To use with a proxy, just set RestMan.proxy to the proper http proxy:
-#
-#   RestMan.proxy = "http://proxy.example.com/"
-#
-# Or inherit the proxy from the environment:
-#
-#   RestMan.proxy = ENV['http_proxy']
-#
-# For live tests of RestMan, try using http://rest-test.heroku.com, which echoes back information about the rest call:
-#
-#   >> RestMan.put 'http://rest-test.heroku.com/resource', :foo => 'baz'
-#   => "PUT http://rest-test.heroku.com/resource with a 7 byte payload, content type application/x-www-form-urlencoded {\"foo\"=>\"baz\"}"
-#
+# :include: _doc/lib/restman.rdoc
 module RestMan
 
   def self.get(url, headers={}, &block)
