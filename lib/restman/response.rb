@@ -6,13 +6,7 @@ module RestMan
 
     include AbstractResponse
 
-    # Return the HTTP response body.
-    #
-    # Future versions of RestMan will deprecate treating response objects
-    # directly as strings, so it will be necessary to call `.body`.
-    #
-    # @return [String]
-    #
+    # :include: _doc/lib/restman/response/body.rdoc
     def body
       # Benchmarking suggests that "#{self}" is fastest, and that caching the
       # body string in an instance variable doesn't make it enough faster to be
