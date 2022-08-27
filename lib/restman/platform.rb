@@ -7,10 +7,7 @@ module RestMan
       RUBY_PLATFORM.include?('darwin')
     end
 
-    # Return true if we are running on Windows.
-    #
-    # @return [Boolean]
-    #
+    # :include: _doc/lib/restman/platform/windows?.rdoc
     def self.windows?
       # Ruby only sets File::ALT_SEPARATOR on Windows, and the Ruby standard
       # library uses that to test what platform it's on.
