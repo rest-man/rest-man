@@ -39,8 +39,7 @@ module RestMan
       @history ||= request.redirection_history || []
     end
 
-    # A hash of the headers, beautified with symbols and underscores.
-    # e.g. "Content-type" will become :content_type.
+    # :include: _doc/lib/restman/abstract_response/headers.rdoc
     def headers
       @headers ||= AbstractResponse.beautify_headers(@net_http_res.to_hash)
     end
