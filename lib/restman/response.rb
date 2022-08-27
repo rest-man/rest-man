@@ -15,15 +15,11 @@ module RestMan
     end
 
     # Convert the HTTP response body to a pure String object.
-    #
-    # @return [String]
     def to_s
       body
     end
 
     # Convert the HTTP response body to a pure String object.
-    #
-    # @return [String]
     def to_str
       body
     end
@@ -32,14 +28,7 @@ module RestMan
       "<RestMan::Response #{code.inspect} #{body_truncated(10).inspect}>"
     end
 
-    # Initialize a Response object. Because RestMan::Response is
-    # (unfortunately) a subclass of String for historical reasons,
-    # Response.create is the preferred initializer.
-    #
-    # @param [String, nil] body The response body from the Net::HTTPResponse
-    # @param [Net::HTTPResponse] net_http_res
-    # @param [RestMan::Request] request
-    # @param [Time] start_time
+    # :include: _doc/lib/restman/response/create.rdoc
     def self.create(body, net_http_res, request, start_time=nil)
       result = self.new(body || '')
 
