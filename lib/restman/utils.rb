@@ -62,22 +62,7 @@ module RestMan
       nil
     end
 
-    # Parse a Content-Type like header.
-    #
-    # Return the main content-type and a hash of options.
-    #
-    # This method was ported directly from Python's cgi.parse_header(). It
-    # probably doesn't read or perform particularly well in ruby.
-    # https://github.com/python/cpython/blob/3.4/Lib/cgi.py#L301-L331
-    #
-    # @param [String] line
-    # @return [Array(String, Hash)]
-    #
-    # @deprecated This method is deprecated and only exists to support Ruby
-    #   2.0, which is not supported by HTTP::Accept.
-    #
-    # @todo remove this method when dropping support for Ruby 2.0
-    #
+    # :include: _doc/lib/restman/utils/deprecated_cgi_parse_header.rdoc
     def self.deprecated_cgi_parse_header(line)
       parts = _cgi_parseparam(';' + line)
       key = parts.next
