@@ -62,9 +62,7 @@ module RestMan
     @proxy_set ||= false
   end
 
-  # Setup the log for RestMan calls.
-  # Value should be a logger but can can be stdout, stderr, or a filename.
-  # You can also configure logging by the environment variable RESTCLIENT_LOG.
+  # :include: _doc/lib/restman/log=.rdoc
   def self.log= log
     @@log = create_log log
   end
