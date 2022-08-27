@@ -92,21 +92,7 @@ module RestMan
       flatten_params(object, true).map {|k, v| v.nil? ? k : "#{k}=#{v}" }.join('&')
     end
 
-    # Transform deeply nested param containers into a flat array of [key,
-    # value] pairs.
-    #
-    # @example
-    #   >> flatten_params({key1: {key2: 123}})
-    #   => [["key1[key2]", 123]]
-    #
-    # @example
-    #   >> flatten_params({key1: {key2: 123, arr: [1,2,3]}})
-    #   => [["key1[key2]", 123], ["key1[arr][]", 1], ["key1[arr][]", 2], ["key1[arr][]", 3]]
-    #
-    # @param object [Hash, ParamsArray] The container to flatten
-    # @param uri_escape [Boolean] Whether to URI escape keys and values
-    # @param parent_key [String] Should not be passed (used for recursion)
-    #
+    # :include: _doc/lib/restman/utils/flatten_params.rdoc
     def self.flatten_params(object, uri_escape=false, parent_key=nil)
       unless object.is_a?(Hash) || object.is_a?(ParamsArray) ||
              (parent_key && object.is_a?(Array))

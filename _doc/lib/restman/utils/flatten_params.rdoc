@@ -1,0 +1,16 @@
+Transform deeply nested param containers into a flat array of [key,
+value] pairs.
+
+*Examples:*
+
+  >> flatten_params({key1: {key2: 123}})
+  => [["key1[key2]", 123]]
+
+  >> flatten_params({key1: {key2: 123, arr: [1,2,3]}})
+  => [["key1[key2]", 123], ["key1[arr][]", 1], ["key1[arr][]", 2], ["key1[arr][]", 3]]
+
+[Parameters:]
+
+  - object (Hash, ParamsArray) -- The container to flatten
+  - uri_escape (Boolean) -- Whether to URI escape keys and values
+  - parent_key (String) -- Should not be passed (used for recursion)
