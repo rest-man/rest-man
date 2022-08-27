@@ -4,24 +4,7 @@ module RestMan
   # Various utility methods
   module Utils
 
-    # Return encoding from an HTTP header hash.
-    #
-    # We use the RFC 7231 specification and do not impose a default encoding on
-    # text. This differs from the older RFC 2616 behavior, which specifies
-    # using ISO-8859-1 for text/* content types without a charset.
-    #
-    # Strings will use the default encoding when this method returns nil. This
-    # default is likely to be UTF-8 for Ruby >= 2.0
-    #
-    # @param headers [Hash<Symbol,String>]
-    #
-    # @return [String, nil] Return the string encoding or nil if no header is
-    #   found.
-    #
-    # @example
-    #   >> get_encoding_from_headers({:content_type => 'text/plain; charset=UTF-8'})
-    #   => "UTF-8"
-    #
+    # :include: _doc/lib/restman/utils/get_encoding_from_headers.rdoc
     def self.get_encoding_from_headers(headers)
       type_header = headers[:content_type]
       return nil unless type_header
