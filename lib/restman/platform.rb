@@ -14,10 +14,7 @@ module RestMan
       !!File::ALT_SEPARATOR
     end
 
-    # Return true if we are running on jruby.
-    #
-    # @return [Boolean]
-    #
+    # :include: _doc/lib/restman/platform/jruby?.rdoc
     def self.jruby?
       # defined on mri >= 1.9
       RUBY_ENGINE == 'jruby'

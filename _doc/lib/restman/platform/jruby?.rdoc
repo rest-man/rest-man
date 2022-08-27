@@ -1,0 +1,4 @@
+:call-seq:
+  jruby? -> boolean
+
+Return true if we are running on jruby.
