@@ -40,15 +40,7 @@ module RestMan
       [types.first.mime_type, types.first.parameters]
     end
 
-    # Parse semi-colon separated, potentially quoted header string iteratively.
-    #
-    # @private
-    #
-    # @deprecated This method is deprecated and only exists to support Ruby
-    #   2.0, which is not supported by HTTP::Accept.
-    #
-    # @todo remove this method when dropping support for Ruby 2.0
-    #
+    # :include: _doc/lib/restman/utils/_cgi_parseparam.rdoc
     def self._cgi_parseparam(s)
       return enum_for(__method__, s) unless block_given?
 
