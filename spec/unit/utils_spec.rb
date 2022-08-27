@@ -73,39 +73,21 @@ describe RestMan::Utils do
   end
 
   describe '.cgi_parse_header' do
-    it 'parses headers', :unless => RUBY_VERSION.start_with?('2.0') do
-      expect(RestMan::Utils.cgi_parse_header('text/plain')).
-        to eq ['text/plain', {}]
 
-      expect(RestMan::Utils.cgi_parse_header('text/vnd.just.made.this.up')).
-        to eq ['text/vnd.just.made.this.up', {}]
+    let(:parse) { ->(line, to:) {
+      expect(RestMan::Utils.cgi_parse_header(line)).to eq(to)
+    }}
 
-      expect(RestMan::Utils.cgi_parse_header('text/plain;charset=us-ascii')).
-        to eq ['text/plain', {'charset' => 'us-ascii'}]
+    it { parse.('text/plain',                                   to: ['text/plain', {}]) }
+    it { parse.('text/vnd.just.made.this.up',                   to: ['text/vnd.just.made.this.up', {}]) }
+    it { parse.('text/plain;charset=us-ascii',                  to: ['text/plain', {'charset' => 'us-ascii'}]) }
+    it { parse.('text/plain ; charset="us-ascii"',              to: ['text/plain', {'charset' => 'us-ascii'}]) }
+    it { parse.('text/plain ; charset="us-ascii"; another=opt', to: ['text/plain', {'charset' => 'us-ascii', 'another' => 'opt'}]) }
+    it { parse.('foo/bar; filename="silly.txt"',                to: ['foo/bar', {'filename' => 'silly.txt'}]) }
+    it { parse.('foo/bar; filename="strange;name"',             to: ['foo/bar', {'filename' => 'strange;name'}]) }
+    it { parse.('foo/bar; filename="strange;name";size=123',    to: ['foo/bar', {'filename' => 'strange;name', 'size' => '123'}]) }
+    it { parse.('foo/bar; name="files"; filename="fo\\"o;bar"', to: ['foo/bar', {'name' => 'files', 'filename' => 'fo"o;bar'}]) }
 
-      expect(RestMan::Utils.cgi_parse_header('text/plain ; charset="us-ascii"')).
-        to eq ['text/plain', {'charset' => 'us-ascii'}]
-
-      expect(RestMan::Utils.cgi_parse_header(
-        'text/plain ; charset="us-ascii"; another=opt')).
-        to eq ['text/plain', {'charset' => 'us-ascii', 'another' => 'opt'}]
-
-      expect(RestMan::Utils.cgi_parse_header(
-        'foo/bar; filename="silly.txt"')).
-        to eq ['foo/bar', {'filename' => 'silly.txt'}]
-
-      expect(RestMan::Utils.cgi_parse_header(
-        'foo/bar; filename="strange;name"')).
-        to eq ['foo/bar', {'filename' => 'strange;name'}]
-
-      expect(RestMan::Utils.cgi_parse_header(
-        'foo/bar; filename="strange;name";size=123')).to eq \
-        ['foo/bar', {'filename' => 'strange;name', 'size' => '123'}]
-
-      expect(RestMan::Utils.cgi_parse_header(
-        'foo/bar; name="files"; filename="fo\\"o;bar"')).to eq \
-        ['foo/bar', {'name' => 'files', 'filename' => 'fo"o;bar'}]
-    end
   end
 
   describe '.encode_query_string' do
