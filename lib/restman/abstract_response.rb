@@ -124,8 +124,7 @@ module RestMan
       _follow_redirection(request.args.dup, &block)
     end
 
-    # Follow a redirection response, but change the HTTP method to GET and drop
-    # the payload from the original request.
+    # :include: _doc/lib/restman/abstract_response/follow_get_redirection.rdoc
     def follow_get_redirection(&block)
       new_args = request.args.dup
       new_args[:method] = :get
