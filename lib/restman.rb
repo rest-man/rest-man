@@ -5,6 +5,7 @@ require 'uri'
 require 'active_method'
 
 require File.dirname(__FILE__) + '/restman/version'
+require File.dirname(__FILE__) + '/restman/statuses'
 require File.dirname(__FILE__) + '/restman/platform'
 require File.dirname(__FILE__) + '/restman/exceptions'
 require File.dirname(__FILE__) + '/restman/utils'
