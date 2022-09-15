@@ -17,7 +17,7 @@ module RestMan
           UrlEncoded.new(params)
         end
       elsif params.is_a?(ParamsArray)
-        if _has_file?(params)
+        if has_file?(params)
           Multipart.new(params)
         else
           UrlEncoded.new(params)
@@ -29,19 +29,12 @@ module RestMan
       end
     end
 
-    def has_file?(params)
-      unless params.is_a?(Hash)
-        raise ArgumentError.new("Must pass Hash, not #{params.inspect}")
-      end
-      _has_file?(params)
-    end
-
-    def _has_file?(obj)
+    def has_file?(obj)
       case obj
       when Hash, ParamsArray
-        obj.any? {|_, v| _has_file?(v) }
+        obj.any? {|_, v| has_file?(v) }
       when Array
-        obj.any? {|v| _has_file?(v) }
+        obj.any? {|v| has_file?(v) }
       else
         obj.respond_to?(:path) && obj.respond_to?(:read)
       end
