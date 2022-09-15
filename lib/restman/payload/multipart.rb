@@ -4,6 +4,11 @@ require 'securerandom'
 module RestMan
   module Payload
     class Multipart < Base
+      autoload :WriteContentDisposition, "#{File.dirname(__FILE__)}/multipart/write_content_disposition"
+
+      include ActiveMethod
+
+      active_method :write_content_disposition
 
       def headers
         super.merge({'Content-Type' => %Q{multipart/form-data; boundary=#{boundary}}})
@@ -37,10 +42,6 @@ module RestMan
       end
 
       private
-
-      def write_content_disposition(stream, name, value, boundary)
-        WriteContentDisposition.call(stream, name, value, boundary)
-      end
 
       # Use the same algorithm used by WebKit: generate 16 random
       # alphanumeric characters, replacing `+` `/` with `A` `B` (included in
