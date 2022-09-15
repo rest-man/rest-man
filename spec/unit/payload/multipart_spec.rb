@@ -69,7 +69,7 @@ describe RestMan::Payload::Multipart, :include_helpers do
 
   it "should detect optional (original) content type and filename" do
     f = File.new(test_image_path)
-    expect(f).to receive(:content_type).and_return('text/plain')
+    expect(MIME::Types).to receive(:type_for).with(f.path).and_return("")
     expect(f).to receive(:original_filename).and_return('foo.txt')
     m = RestMan::Payload::Multipart.new({:foo => f})
     expect(m.to_s).to eq <<~EOS
