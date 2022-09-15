@@ -29,6 +29,14 @@ describe RestMan::Payload::Streamed, :include_helpers do
     end
   end
 
+  it "should preperly determin the size of an IO like paylod" do
+    io = IO.new(0)
+    allow(io).to receive(:stat).and_return(double("IO::Stat", size: 10))
+    payload = RestMan::Payload.generate(io)
+    expect(payload.size).to eq 10
+    expect(payload.length).to eq 10
+  end
+
   it "should have a closed? method" do
     f = File.new(test_image_path)
     payload = RestMan::Payload.generate(f)
