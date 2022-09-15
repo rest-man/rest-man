@@ -5,6 +5,10 @@ module RestMan
   module Payload
     class Multipart < Base
 
+      def headers
+        super.merge({'Content-Type' => %Q{multipart/form-data; boundary=#{boundary}}})
+      end
+
       def build_stream(params)
         @stream = Tempfile.new('rest-man.multipart.')
         @stream.binmode
@@ -24,28 +28,27 @@ module RestMan
         end
       end
 
+      def close
+        @stream.close!
+      end
+
+      def boundary
+        @boundary ||= generate_boundary
+      end
+
+      private
+
       def write_content_disposition(stream, name, value, boundary)
         WriteContentDisposition.call(stream, name, value, boundary)
       end
 
-      def boundary
-        return @boundary if defined?(@boundary) && @boundary
+      # Use the same algorithm used by WebKit: generate 16 random
+      # alphanumeric characters, replacing `+` `/` with `A` `B` (included in
+      # the list twice) to round out the set of 64.
+      def generate_boundary
+        s = SecureRandom.base64(12).tr('+/', 'AB')
 
-        # Use the same algorithm used by WebKit: generate 16 random
-        # alphanumeric characters, replacing `+` `/` with `A` `B` (included in
-        # the list twice) to round out the set of 64.
-        s = SecureRandom.base64(12)
-        s.tr!('+/', 'AB')
-
-        @boundary = '----RubyFormBoundary' + s
-      end
-
-      def headers
-        super.merge({'Content-Type' => %Q{multipart/form-data; boundary=#{boundary}}})
-      end
-
-      def close
-        @stream.close!
+        '----RubyFormBoundary' + s
       end
     end
   end
