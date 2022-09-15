@@ -40,11 +40,6 @@ module RestMan
         @boundary = '----RubyFormBoundary' + s
       end
 
-      # :include: _doc/lib/restman/payload/handle_key.rdoc
-      def handle_key key
-        key
-      end
-
       def headers
         super.merge({'Content-Type' => %Q{multipart/form-data; boundary=#{boundary}}})
       end
