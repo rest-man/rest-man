@@ -32,7 +32,7 @@ module RestMan
 
     def initialize args
       @method = Init.http_method(args)
-      @headers = (args[:headers] || {}).dup
+      @headers = Init.headers(args)
       if args[:url]
         @url = process_url_params(normalize_url(args[:url]), headers)
       else

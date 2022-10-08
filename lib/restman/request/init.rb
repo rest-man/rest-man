@@ -12,6 +12,11 @@ module RestMan
 
         method.to_s.downcase
       end
+
+      def headers(args)
+        (args[:headers] || {}).dup
+      end
+
     end
   end
 end
