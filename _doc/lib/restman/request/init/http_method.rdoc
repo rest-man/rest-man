@@ -1,0 +1,15 @@
+:call-seq:
+  http_method(args) -> string
+
+Parse `args[:method]` and return a normalized string version.
+
+Raise ArgumentError if the `args[:method]` is falsy, but otherwise do no
+validation.
+
+[Parameters:]
+
+  - *args* (Hash)
+
+[See Also:]
+
+  - net_http_request_class

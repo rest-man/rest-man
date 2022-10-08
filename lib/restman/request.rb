@@ -7,6 +7,7 @@ require 'mime/types/columnar'
 module RestMan
   # :include: _doc/lib/restman/request.rdoc
   class Request
+    include Init
 
     attr_reader :method, :uri, :url, :headers, :payload, :proxy,
                 :user, :password, :read_timeout, :max_redirects,
@@ -30,7 +31,7 @@ module RestMan
     end
 
     def initialize args
-      @method = normalize_method(args[:method])
+      @method = Init.http_method(args)
       @headers = (args[:headers] || {}).dup
       if args[:url]
         @url = process_url_params(normalize_url(args[:url]), headers)
@@ -453,12 +454,6 @@ module RestMan
         warned = true
       end
       warned
-    end
-
-    # :include: _doc/lib/restman/request/normalize_method.rdoc
-    def normalize_method(method)
-      raise ArgumentError.new('must pass :method') unless method
-      method.to_s.downcase
     end
 
     def transmit uri, req, payload, & block
