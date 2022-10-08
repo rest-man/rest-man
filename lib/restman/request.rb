@@ -33,11 +33,7 @@ module RestMan
     def initialize args
       @method = Init.http_method(args)
       @headers = Init.headers(args)
-      if args[:url]
-        @url = process_url_params(normalize_url(args[:url]), headers)
-      else
-        raise ArgumentError, "must pass :url"
-      end
+      @url = Init.url(args, headers)
 
       @user = @password = nil
       parse_url_with_auth!(url)
@@ -154,38 +150,6 @@ module RestMan
     # :include: _doc/lib/restman/request/use_ssl.rdoc
     def use_ssl?
       uri.is_a?(URI::HTTPS)
-    end
-
-    # :include: _doc/lib/restman/request/process_url_params.rdoc
-    def process_url_params(url, headers)
-      url_params = nil
-
-      # find and extract/remove "params" key if the value is a Hash/ParamsArray
-      headers.delete_if do |key, value|
-        if key.to_s.downcase == 'params' &&
-            (value.is_a?(Hash) || value.is_a?(RestMan::ParamsArray))
-          if url_params
-            raise ArgumentError.new("Multiple 'params' options passed")
-          end
-          url_params = value
-          true
-        else
-          false
-        end
-      end
-
-      # build resulting URL with query string
-      if url_params && !url_params.empty?
-        query_string = RestMan::Utils.encode_query_string(url_params)
-
-        if url.include?('?')
-          url + '&' + query_string
-        else
-          url + '?' + query_string
-        end
-      else
-        url
-      end
     end
 
     # :include: _doc/lib/restman/request/cookies.rdoc
@@ -331,12 +295,6 @@ module RestMan
       else
         return http.request(req, body, &block)
       end
-    end
-
-    # :include: _doc/lib/restman/request/normalize_url.rdoc
-    def normalize_url(url)
-      url = 'http://' + url unless url.match(%r{\A[a-z][a-z0-9+.-]*://}i)
-      url
     end
 
     # :include: _doc/lib/restman/request/default_ssl_cert_store.rdoc

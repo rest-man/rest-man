@@ -1,6 +1,9 @@
 module RestMan
   class Request
     module Init
+
+      autoload :Url, 'restman/request/init/url'
+
       include ActiveMethod
 
       module_function
@@ -16,6 +19,8 @@ module RestMan
       def headers(args)
         (args[:headers] || {}).dup
       end
+
+      active_method :url, module_function: true
 
     end
   end
