@@ -49,15 +49,15 @@ describe RestMan::Request, :include_helpers do
 
   describe "user - password" do
     it "extracts the username and password when parsing http://user:password@example.com/" do
-      @request.send(:parse_url_with_auth!, 'http://joe:pass1@example.com/resource')
-      expect(@request.user).to eq 'joe'
-      expect(@request.password).to eq 'pass1'
+      request = RestMan::Request.new(method: :get, url: 'http://joe:pass1@example.com/resource')
+      expect(request.user).to eq 'joe'
+      expect(request.password).to eq 'pass1'
     end
 
     it "extracts with escaping the username and password when parsing http://user:password@example.com/" do
-      @request.send(:parse_url_with_auth!, 'http://joe%20:pass1@example.com/resource')
-      expect(@request.user).to eq 'joe '
-      expect(@request.password).to eq 'pass1'
+      request = RestMan::Request.new(method: :get, url: 'http://joe%20:pass1@example.com/resource')
+      expect(request.user).to eq 'joe '
+      expect(request.password).to eq 'pass1'
     end
 
     it "doesn't overwrite user and password (which may have already been set by the Resource constructor) if there is no user/password in the url" do
@@ -1222,26 +1222,11 @@ describe RestMan::Request, :include_helpers do
     end
   end
 
-  describe 'constructor' do
-    it 'should reject valid URIs with no hostname' do
-      expect(URI.parse('http:///').hostname).to be_nil
-
-      expect {
-        RestMan::Request.new(method: :get, url: 'http:///')
-      }.to raise_error(URI::InvalidURIError, /\Abad URI/)
-    end
-
-    it 'should reject invalid URIs' do
-      expect {
-        RestMan::Request.new(method: :get, url: 'http://::')
-      }.to raise_error(URI::InvalidURIError)
-    end
-  end
-
   it 'raises with invalid URI' do
     expect {
       RestMan::Request.new(method: :get, url: 'http://a@b:c')
     }.to raise_error(URI::InvalidURIError)
+
     expect {
       RestMan::Request.new(method: :get, url: 'http://::')
     }.to raise_error(URI::InvalidURIError)

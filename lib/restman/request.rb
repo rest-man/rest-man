@@ -1,6 +1,4 @@
 require 'tempfile'
-require 'cgi'
-require 'netrc'
 require 'set'
 require 'mime/types/columnar'
 
@@ -34,17 +32,13 @@ module RestMan
       @method = Init.http_method(args)
       @headers = Init.headers(args)
       @url = Init.url(args, headers)
-
-      @user = @password = nil
-      parse_url_with_auth!(url)
+      @uri = Init.uri(url)
+      @user, @password = Init.auth(uri, args)
 
       # process cookie arguments found in headers or args
       @cookie_jar = process_cookie_args!(@uri, @headers, args)
 
       @payload = Payload.generate(args[:payload])
-
-      @user = args[:user] if args.include?(:user)
-      @password = args[:password] if args.include?(:password)
 
       if args.include?(:timeout)
         @read_timeout = args[:timeout]
@@ -382,23 +376,6 @@ module RestMan
     end
 
     private
-
-    # :include: _doc/lib/restman/request/parse_url_with_auth.rdoc
-    def parse_url_with_auth!(url)
-      uri = URI.parse(url)
-
-      if uri.hostname.nil?
-        raise URI::InvalidURIError.new("bad URI(no host provided): #{url}")
-      end
-
-      @user = CGI.unescape(uri.user) if uri.user
-      @password = CGI.unescape(uri.password) if uri.password
-      if !@user && !@password
-        @user, @password = Netrc.read[uri.hostname]
-      end
-
-      @uri = uri
-    end
 
     def print_verify_callback_warnings
       warned = false
