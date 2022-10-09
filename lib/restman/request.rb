@@ -45,13 +45,7 @@ module RestMan
       @local_port = args[:local_port]
       @keep_alive_timeout = args[:keep_alive_timeout]
       @close_on_empty_response = args[:close_on_empty_response]
-
-      @stream_log_percent = args[:stream_log_percent] || 10
-      if @stream_log_percent <= 0 || @stream_log_percent > 100
-        raise ArgumentError.new(
-          "Invalid :stream_log_percent #{@stream_log_percent.inspect}")
-      end
-
+      @stream_log_percent = Init.stream_log_percent(args)
       @proxy = args.fetch(:proxy) if args.include?(:proxy)
 
       @ssl_opts = {}

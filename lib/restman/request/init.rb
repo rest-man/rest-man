@@ -82,6 +82,14 @@ module RestMan
         end
       end
 
+      def stream_log_percent(args)
+        percent = args[:stream_log_percent] || 10
+        if percent <= 0 || percent > 100
+          raise ArgumentError.new("Invalid :stream_log_percent #{@stream_log_percent.inspect}")
+        end
+        percent
+      end
+
     end
   end
 end
