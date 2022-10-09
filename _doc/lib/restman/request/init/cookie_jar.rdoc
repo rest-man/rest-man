@@ -1,5 +1,5 @@
 :call-seq:
-  process_cookie_args!(uri, headers, args) -> HTTP::CookieJar
+  cookie_jar(uri, headers, args) -> HTTP::CookieJar
 
 Process cookies passed as hash or as HTTP::CookieJar. For backwards
 compatibility, these may be passed as a :cookies option masquerading

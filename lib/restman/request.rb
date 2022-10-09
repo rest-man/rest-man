@@ -34,9 +34,7 @@ module RestMan
       @url = Init.url(args, headers)
       @uri = Init.uri(url)
       @user, @password = Init.auth(uri, args)
-
-      # process cookie arguments found in headers or args
-      @cookie_jar = process_cookie_args!(@uri, @headers, args)
+      @cookie_jar = Init.cookie_jar(uri, headers, args)
 
       @payload = Payload.generate(args[:payload])
 
@@ -170,56 +168,6 @@ module RestMan
       return nil if arr.empty?
 
       return HTTP::Cookie.cookie_value(arr)
-    end
-
-    # :include: _doc/lib/restman/request/process_cookie_args.rdoc
-    def process_cookie_args!(uri, headers, args)
-
-      # Avoid ambiguity in whether options from headers or options from
-      # Request#initialize should take precedence by raising ArgumentError when
-      # both are present. Prior versions of rest-man claimed to give
-      # precedence to init options, but actually gave precedence to headers.
-      # Avoid that mess by erroring out instead.
-      if headers[:cookies] && args[:cookies]
-        raise ArgumentError.new(
-          "Cannot pass :cookies in Request.new() and in headers hash")
-      end
-
-      cookies_data = headers.delete(:cookies) || args[:cookies]
-
-      # return copy of cookie jar as is
-      if cookies_data.is_a?(HTTP::CookieJar)
-        return cookies_data.dup
-      end
-
-      # convert cookies hash into a CookieJar
-      jar = HTTP::CookieJar.new
-
-      (cookies_data || []).each do |key, val|
-
-        # Support for Array<HTTP::Cookie> mode:
-        # If key is a cookie object, add it to the jar directly and assert that
-        # there is no separate val.
-        if key.is_a?(HTTP::Cookie)
-          if val
-            raise ArgumentError.new("extra cookie val: #{val.inspect}")
-          end
-
-          jar.add(key)
-          next
-        end
-
-        if key.is_a?(Symbol)
-          key = key.to_s
-        end
-
-        # assume implicit domain from the request URI, and set for_domain to
-        # permit subdomains
-        jar.add(HTTP::Cookie.new(key, val, domain: uri.hostname.downcase,
-                                 path: '/', for_domain: true))
-      end
-
-      jar
     end
 
     # :include: _doc/lib/restman/request/make_headers.rdoc

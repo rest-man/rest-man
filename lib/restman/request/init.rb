@@ -6,6 +6,7 @@ module RestMan
     module Init
 
       autoload :Url, 'restman/request/init/url'
+      autoload :CookieJar, 'restman/request/init/cookie_jar'
 
       include ActiveMethod
 
@@ -48,6 +49,8 @@ module RestMan
 
         [user, password]
       end
+
+      active_method :cookie_jar, module_function: true
 
     end
   end
