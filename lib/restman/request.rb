@@ -41,15 +41,8 @@ module RestMan
       Init.write_timeout(args) {|value| @write_timeout = value}
       @block_response = args[:block_response]
       @raw_response = args[:raw_response] || false
-
-      if args.include?(:local_host)
-        @local_host = args[:local_host]
-      end
-
-      if args.include?(:local_port)
-        @local_port = args[:local_port]
-      end
-
+      @local_host = args[:local_host]
+      @local_port = args[:local_port]
       @keep_alive_timeout = args[:keep_alive_timeout]
       @close_on_empty_response = args[:close_on_empty_response]
 
