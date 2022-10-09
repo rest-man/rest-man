@@ -52,6 +52,36 @@ module RestMan
 
       active_method :cookie_jar, module_function: true
 
+      def read_timeout(args)
+        if args.key?(:read_timeout)
+          yield args[:read_timeout] 
+        elsif args.key?(:timeout)
+          yield args[:timeout]
+        else
+          # Do nothing
+        end
+      end
+
+      def write_timeout(args)
+        if args.key?(:write_timeout)
+          yield args[:write_timeout] 
+        elsif args.key?(:timeout)
+          yield args[:timeout]
+        else
+          # Do nothing
+        end
+      end
+
+      def open_timeout(args)
+        if args.key?(:open_timeout)
+          yield args[:open_timeout] 
+        elsif args.key?(:timeout)
+          yield args[:timeout]
+        else
+          # Do nothing
+        end
+      end
+
     end
   end
 end

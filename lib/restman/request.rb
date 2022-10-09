@@ -35,23 +35,10 @@ module RestMan
       @uri = Init.uri(url)
       @user, @password = Init.auth(uri, args)
       @cookie_jar = Init.cookie_jar(uri, headers, args)
-
       @payload = Payload.generate(args[:payload])
-
-      if args.include?(:timeout)
-        @read_timeout = args[:timeout]
-        @open_timeout = args[:timeout]
-        @write_timeout = args[:timeout]
-      end
-      if args.include?(:read_timeout)
-        @read_timeout = args[:read_timeout]
-      end
-      if args.include?(:open_timeout)
-        @open_timeout = args[:open_timeout]
-      end
-      if args.include?(:write_timeout)
-        @write_timeout = args[:write_timeout]
-      end
+      Init.read_timeout(args) {|value| @read_timeout = value}
+      Init.open_timeout(args) {|value| @open_timeout = value}
+      Init.write_timeout(args) {|value| @write_timeout = value}
       @block_response = args[:block_response]
       @raw_response = args[:raw_response] || false
 
