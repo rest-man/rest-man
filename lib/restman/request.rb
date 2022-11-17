@@ -10,6 +10,7 @@ module RestMan
     autoload :StringifyHeaders, 'restman/request/stringify_headers'
     autoload :MakeCookieHeader, 'restman/request/make_cookie_header'
     autoload :MakeHeaders, 'restman/request/make_headers'
+    autoload :ProxyURI, 'restman/request/proxy_uri'
 
     include ActiveMethod
     include Init
@@ -112,23 +113,7 @@ module RestMan
     active_method :make_headers
 
     # :include: _doc/lib/restman/request/proxy_uri.rdoc
-    def proxy_uri
-      if defined?(@proxy)
-        if @proxy
-          URI.parse(@proxy)
-        else
-          false
-        end
-      elsif RestMan.proxy_set?
-        if RestMan.proxy
-          URI.parse(RestMan.proxy)
-        else
-          false
-        end
-      else
-        nil
-      end
-    end
+    active_method :proxy_uri, ProxyURI
 
     def net_http_object(hostname, port)
       p_uri = proxy_uri
