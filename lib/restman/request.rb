@@ -8,6 +8,7 @@ module RestMan
 
     autoload :MaybeConvertExtension, 'restman/request/maybe_convert_extension'
     autoload :StringifyHeaders, 'restman/request/stringify_headers'
+    autoload :MakeCookieHeader, 'restman/request/make_cookie_header'
 
     include ActiveMethod
     include Init
@@ -104,14 +105,7 @@ module RestMan
     end
 
     # :include: _doc/lib/restman/request/make_cookie_header.rdoc
-    def make_cookie_header
-      return nil if cookie_jar.nil?
-
-      arr = cookie_jar.cookies(url)
-      return nil if arr.empty?
-
-      return HTTP::Cookie.cookie_value(arr)
-    end
+    active_method :make_cookie_header
 
     # :include: _doc/lib/restman/request/make_headers.rdoc
     def make_headers(user_headers)
