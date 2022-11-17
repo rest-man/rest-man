@@ -5,6 +5,10 @@ require 'mime/types/columnar'
 module RestMan
   # :include: _doc/lib/restman/request.rdoc
   class Request
+
+    autoload :MaybeConvertExtension, 'restman/request/maybe_convert_extension'
+
+    include ActiveMethod
     include Init
 
     attr_reader :method, :uri, :url, :headers, :payload, :proxy,
@@ -469,23 +473,6 @@ module RestMan
     end
 
     # :include: _doc/lib/restman/request/maybe_convert_extension.rdoc
-    def maybe_convert_extension(ext)
-      unless ext =~ /\A[a-zA-Z0-9_@-]+\z/
-        # Don't look up strings unless they look like they could be a file
-        # extension known to mime-types.
-        #
-        # There currently isn't any API public way to look up extensions
-        # directly out of MIME::Types, but the type_for() method only strips
-        # off after a period anyway.
-        return ext
-      end
-
-      types = MIME::Types.type_for(ext)
-      if types.empty?
-        ext
-      else
-        types.first.content_type
-      end
-    end
+    active_method :maybe_convert_extension
   end
 end
