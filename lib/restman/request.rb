@@ -47,43 +47,7 @@ module RestMan
       @close_on_empty_response = args[:close_on_empty_response]
       @stream_log_percent = Init.stream_log_percent(args)
       @proxy = args.fetch(:proxy) if args.include?(:proxy)
-
-      @ssl_opts = {}
-
-      if args.include?(:verify_ssl)
-        v_ssl = args.fetch(:verify_ssl)
-        if v_ssl
-          if v_ssl == true
-            # interpret :verify_ssl => true as VERIFY_PEER
-            @ssl_opts[:verify_ssl] = OpenSSL::SSL::VERIFY_PEER
-          else
-            # otherwise pass through any truthy values
-            @ssl_opts[:verify_ssl] = v_ssl
-          end
-        else
-          # interpret all falsy :verify_ssl values as VERIFY_NONE
-          @ssl_opts[:verify_ssl] = OpenSSL::SSL::VERIFY_NONE
-        end
-      else
-        # if :verify_ssl was not passed, default to VERIFY_PEER
-        @ssl_opts[:verify_ssl] = OpenSSL::SSL::VERIFY_PEER
-      end
-
-      SSLOptionList.each do |key|
-        source_key = ('ssl_' + key).to_sym
-        if args.has_key?(source_key)
-          @ssl_opts[key.to_sym] = args.fetch(source_key)
-        end
-      end
-
-      # Set some other default SSL options, but only if we have an HTTPS URI.
-      if use_ssl?
-
-        # If there's no CA file, CA path, or cert store provided, use default
-        if !ssl_ca_file && !ssl_ca_path && !@ssl_opts.include?(:cert_store)
-          @ssl_opts[:cert_store] = self.class.default_ssl_cert_store
-        end
-      end
+      @ssl_opts = Init.ssl_opts(args, uri)
 
       @log = args[:log]
       @max_redirects = args[:max_redirects] || 10

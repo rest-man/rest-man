@@ -7,6 +7,7 @@ module RestMan
 
       autoload :Url, 'restman/request/init/url'
       autoload :CookieJar, 'restman/request/init/cookie_jar'
+      autoload :SSLOpts, 'restman/request/init/ssl_opts'
 
       include ActiveMethod
 
@@ -89,6 +90,8 @@ module RestMan
         end
         percent
       end
+
+      active_method :ssl_opts, SSLOpts, module_function: true
 
     end
   end
