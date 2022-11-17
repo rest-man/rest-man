@@ -11,6 +11,7 @@ module RestMan
     autoload :MakeCookieHeader, 'restman/request/make_cookie_header'
     autoload :MakeHeaders, 'restman/request/make_headers'
     autoload :ProxyURI, 'restman/request/proxy_uri'
+    autoload :NetHTTPObject, 'restman/request/net_http_object'
 
     include ActiveMethod
     include Init
@@ -115,21 +116,7 @@ module RestMan
     # :include: _doc/lib/restman/request/proxy_uri.rdoc
     active_method :proxy_uri, ProxyURI
 
-    def net_http_object(hostname, port)
-      p_uri = proxy_uri
-
-      if p_uri.nil?
-        # no proxy set
-        Net::HTTP.new(hostname, port)
-      elsif !p_uri
-        # proxy explicitly set to none
-        Net::HTTP.new(hostname, port, nil, nil, nil, nil)
-      else
-        Net::HTTP.new(hostname, port,
-                      p_uri.hostname, p_uri.port, p_uri.user, p_uri.password)
-
-      end
-    end
+    active_method :net_http_object, NetHTTPObject
 
     def net_http_request_class(method)
       Net::HTTP.const_get(method.capitalize, false)
