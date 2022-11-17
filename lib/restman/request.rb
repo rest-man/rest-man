@@ -9,6 +9,7 @@ module RestMan
     autoload :MaybeConvertExtension, 'restman/request/maybe_convert_extension'
     autoload :StringifyHeaders, 'restman/request/stringify_headers'
     autoload :MakeCookieHeader, 'restman/request/make_cookie_header'
+    autoload :MakeHeaders, 'restman/request/make_headers'
 
     include ActiveMethod
     include Init
@@ -108,25 +109,7 @@ module RestMan
     active_method :make_cookie_header
 
     # :include: _doc/lib/restman/request/make_headers.rdoc
-    def make_headers(user_headers)
-      headers = stringify_headers(default_headers).merge(stringify_headers(user_headers))
-
-      # override headers from the payload (e.g. Content-Type, Content-Length)
-      if @payload
-        headers = @payload.headers.merge(headers)
-      end
-
-      # merge in cookies
-      cookies = make_cookie_header
-      if cookies && !cookies.empty?
-        if headers['Cookie']
-          warn('warning: overriding "Cookie" header with :cookies option')
-        end
-        headers['Cookie'] = cookies
-      end
-
-      headers
-    end
+    active_method :make_headers
 
     # :include: _doc/lib/restman/request/proxy_uri.rdoc
     def proxy_uri
