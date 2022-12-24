@@ -59,7 +59,7 @@ module RestMan
         elsif args.key?(:timeout)
           yield args[:timeout]
         else
-          # Do nothing
+          60
         end
       end
 
@@ -69,7 +69,7 @@ module RestMan
         elsif args.key?(:timeout)
           yield args[:timeout]
         else
-          # Do nothing
+          60
         end
       end
 
@@ -79,7 +79,15 @@ module RestMan
         elsif args.key?(:timeout)
           yield args[:timeout]
         else
-          # Do nothing
+          60
+        end
+      end
+
+      def keep_alive_timeout(args)
+        if args.key?(:keep_alive_timeout)
+          yield args[:keep_alive_timeout] 
+        else
+          2
         end
       end
 

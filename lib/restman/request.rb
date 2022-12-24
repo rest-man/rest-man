@@ -21,7 +21,9 @@ module RestMan
                 :user, :password, :read_timeout, :max_redirects,
                 :open_timeout, :raw_response, :processed_headers, :args,
                 :ssl_opts, :write_timeout, :max_retries, :keep_alive_timeout,
-                :close_on_empty_response, :local_host, :local_port
+                :close_on_empty_response, :local_host, :local_port,
+
+                :before_execution_proc, :block_response
 
     # An array of previous redirection responses
     attr_accessor :redirection_history
@@ -53,7 +55,7 @@ module RestMan
       @raw_response = args[:raw_response] || false
       @local_host = args[:local_host]
       @local_port = args[:local_port]
-      @keep_alive_timeout = args[:keep_alive_timeout]
+      Init.keep_alive_timeout(args) {|value| @keep_alive_timeout = value}
       @close_on_empty_response = args[:close_on_empty_response]
       @stream_log_percent = Init.stream_log_percent(args)
       @proxy = args.fetch(:proxy) if args.include?(:proxy)
@@ -123,15 +125,6 @@ module RestMan
       Net::HTTP.const_get(method.capitalize, false)
     end
 
-    def net_http_do_request(http, req, body=nil, &block)
-      if body && body.respond_to?(:read)
-        req.body_stream = body
-        return http.request(req, nil, &block)
-      else
-        return http.request(req, body, &block)
-      end
-    end
-
     # :include: _doc/lib/restman/request/default_ssl_cert_store.rdoc
     def self.default_ssl_cert_store
       DefaultSSLCertStore.call
@@ -178,150 +171,7 @@ module RestMan
       }
     end
 
-    private
-
-    def print_verify_callback_warnings
-      warned = false
-      if RestMan::Platform.mac_mri?
-        warn('warning: ssl_verify_callback return code is ignored on OS X')
-        warned = true
-      end
-      if RestMan::Platform.jruby?
-        warn('warning: SSL verify_callback may not work correctly in jruby')
-        warn('see https://github.com/jruby/jruby/issues/597')
-        warned = true
-      end
-      warned
-    end
-
-    def transmit uri, req, payload, & block
-
-      # We set this to true in the net/http block so that we can distinguish
-      # read_timeout from open_timeout. Now that we only support Ruby 2.0+,
-      # this is only needed for Timeout exceptions thrown outside of Net::HTTP.
-      established_connection = false
-
-      setup_credentials req
-
-      net = net_http_object(uri.hostname, uri.port)
-      net.use_ssl = uri.is_a?(URI::HTTPS)
-      net.ssl_version = ssl_version if ssl_version
-      net.min_version = ssl_min_version if ssl_min_version
-      net.max_version = ssl_max_version if ssl_max_version
-      net.ssl_timeout = ssl_timeout if ssl_timeout
-      net.ciphers = ssl_ciphers if ssl_ciphers
-
-      net.verify_mode = verify_ssl
-
-      net.cert = ssl_client_cert if ssl_client_cert
-      net.key = ssl_client_key if ssl_client_key
-      net.ca_file = ssl_ca_file if ssl_ca_file
-      net.ca_path = ssl_ca_path if ssl_ca_path
-      net.cert_store = ssl_cert_store if ssl_cert_store
-
-      net.max_retries = max_retries
-
-      net.keep_alive_timeout = keep_alive_timeout if keep_alive_timeout
-      net.close_on_empty_response = close_on_empty_response if close_on_empty_response
-      net.local_host = local_host if local_host
-      net.local_port = local_port if local_port
-
-      # We no longer rely on net.verify_callback for the main SSL verification
-      # because it's not well supported on all platforms (see comments below).
-      # But do allow users to set one if they want.
-      if ssl_verify_callback
-        net.verify_callback = ssl_verify_callback
-
-        # Hilariously, jruby only calls the callback when cert_store is set to
-        # something, so make sure to set one.
-        # https://github.com/jruby/jruby/issues/597
-        if RestMan::Platform.jruby?
-          net.cert_store ||= OpenSSL::X509::Store.new
-        end
-
-        if ssl_verify_callback_warnings != false
-          if print_verify_callback_warnings
-            warn('pass :ssl_verify_callback_warnings => false to silence this')
-          end
-        end
-      end
-
-      if OpenSSL::SSL::VERIFY_PEER == OpenSSL::SSL::VERIFY_NONE
-        warn('WARNING: OpenSSL::SSL::VERIFY_PEER == OpenSSL::SSL::VERIFY_NONE')
-        warn('This dangerous monkey patch leaves you open to MITM attacks!')
-        warn('Try passing :verify_ssl => false instead.')
-      end
-
-      if defined? @read_timeout
-        if @read_timeout == -1
-          warn 'Deprecated: to disable timeouts, please use nil instead of -1'
-          @read_timeout = nil
-        end
-        net.read_timeout = @read_timeout
-      end
-      if defined? @open_timeout
-        if @open_timeout == -1
-          warn 'Deprecated: to disable timeouts, please use nil instead of -1'
-          @open_timeout = nil
-        end
-        net.open_timeout = @open_timeout
-      end
-      if defined? @write_timeout
-        if @write_timeout == -1
-          warn 'Deprecated: to disable timeouts, please use nil instead of -1'
-          @write_timeout = nil
-        end
-        net.write_timeout = @write_timeout
-      end
-
-      RestMan.before_execution_procs.each do |before_proc|
-        before_proc.call(req, args)
-      end
-
-      if @before_execution_proc
-        @before_execution_proc.call(req, args)
-      end
-
-      log_request
-
-      start_time = Time.now
-      tempfile = nil
-
-      net.start do |http|
-        established_connection = true
-
-        if @block_response
-          net_http_do_request(http, req, payload, &@block_response)
-        else
-          res = net_http_do_request(http, req, payload) { |http_response|
-            if @raw_response
-              # fetch body into tempfile
-              tempfile = fetch_body_to_tempfile(http_response)
-            else
-              # fetch body
-              http_response.read_body
-            end
-            http_response
-          }
-          process_result(res, start_time, tempfile, &block)
-        end
-      end
-    rescue EOFError
-      raise RestMan::ServerBrokeConnection
-    rescue Net::OpenTimeout => err
-      raise RestMan::Exceptions::OpenTimeout.new(nil, err)
-    rescue Net::ReadTimeout => err
-      raise RestMan::Exceptions::ReadTimeout.new(nil, err)
-    rescue Net::WriteTimeout => err
-      raise RestMan::Exceptions::WriteTimeout.new(nil, err)
-    rescue Timeout::Error, Errno::ETIMEDOUT => err
-      # handling for non-Net::HTTP timeouts
-      if established_connection
-        raise RestMan::Exceptions::ReadTimeout.new(nil, err)
-      else
-        raise RestMan::Exceptions::OpenTimeout.new(nil, err)
-      end
-    end
+    active_method :transmit
 
     def setup_credentials(req)
       if user && !@processed_headers_lowercase.include?('authorization')

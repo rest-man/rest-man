@@ -21,6 +21,9 @@ describe RestMan::Request, :include_helpers do
     allow(@net).to receive(:ciphers=)
     allow(@net).to receive(:cert_store=)
     allow(@net).to receive(:max_retries=)
+    allow(@net).to receive(:read_timeout=)
+    allow(@net).to receive(:write_timeout=)
+    allow(@net).to receive(:open_timeout=)
     RestMan.log = nil
   end
 
@@ -654,18 +657,6 @@ describe RestMan::Request, :include_helpers do
   end
 
   describe "timeout" do
-    it "does not set timeouts if not specified" do
-      @request = RestMan::Request.new(:method => :put, :url => 'http://some/resource', :payload => 'payload')
-      allow(@http).to receive(:request)
-      allow(@request).to receive(:process_result)
-
-      expect(@net).not_to receive(:read_timeout=)
-      expect(@net).not_to receive(:open_timeout=)
-      expect(@net).not_to receive(:write_timeout=)
-
-      @request.send(:transmit, @uri, 'req', nil)
-    end
-
     it 'sets read_timeout' do
       @request = RestMan::Request.new(:method => :put, :url => 'http://some/resource', :payload => 'payload', :read_timeout => 123)
       allow(@http).to receive(:request)
@@ -728,35 +719,6 @@ describe RestMan::Request, :include_helpers do
 
       expect(@net).to receive(:read_timeout=).with(nil)
       expect(@net).to receive(:open_timeout=).with(nil)
-      expect(@net).to receive(:write_timeout=).with(nil)
-
-      @request.send(:transmit, @uri, 'req', nil)
-    end
-
-    it 'deprecated: warns when disabling timeout by setting it to -1' do
-      @request = RestMan::Request.new(:method => :put, :url => 'http://some/resource', :payload => 'payload', :read_timeout => -1)
-      allow(@http).to receive(:request)
-      allow(@request).to receive(:process_result)
-
-      expect(@net).to receive(:read_timeout=).with(nil)
-
-      expect(fake_stderr {
-        @request.send(:transmit, @uri, 'req', nil)
-      }).to match(/^Deprecated: .*timeout.* nil instead of -1$/)
-    end
-
-    it "deprecated: disable timeout by setting it to -1" do
-      @request = RestMan::Request.new(:method => :put, :url => 'http://some/resource', :payload => 'payload', :read_timeout => -1, :open_timeout => -1, :write_timeout => -1)
-      allow(@http).to receive(:request)
-      allow(@request).to receive(:process_result)
-
-      expect(@request).to receive(:warn)
-      expect(@net).to receive(:read_timeout=).with(nil)
-
-      expect(@request).to receive(:warn)
-      expect(@net).to receive(:open_timeout=).with(nil)
-
-      expect(@request).to receive(:warn)
       expect(@net).to receive(:write_timeout=).with(nil)
 
       @request.send(:transmit, @uri, 'req', nil)
