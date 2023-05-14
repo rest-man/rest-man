@@ -13,6 +13,7 @@ module RestMan
     autoload :ProxyURI, 'restman/request/proxy_uri'
     autoload :NetHTTPObject, 'restman/request/net_http_object'
     autoload :DefaultSSLCertStore, 'restman/request/default_ssl_cert_store'
+    autoload :LogRequest, 'restman/request/log_request'
 
     include ActiveMethod
     include Init
@@ -130,35 +131,12 @@ module RestMan
       DefaultSSLCertStore.call
     end
 
-    def redacted_uri
-      if uri.password
-        sanitized_uri = uri.dup
-        sanitized_uri.password = 'REDACTED'
-        sanitized_uri
-      else
-        uri
-      end
-    end
-
-    def redacted_url
-      redacted_uri.to_s
-    end
-
     # Default to the global logger if there's not a request-specific one
     def log
       @log || RestMan.log
     end
 
-    def log_request
-      return unless log
-
-      out = []
-
-      out << "RestMan.#{method} #{redacted_url.inspect}"
-      out << payload.short_inspect if payload
-      out << processed_headers.to_a.sort.map { |(k, v)| [k.inspect, v.inspect].join("=>") }.join(", ")
-      log << out.join(', ') + "\n"
-    end
+    active_method :log_request
 
     # :include: _doc/lib/restman/request/stringify_headers.rdoc
     active_method :stringify_headers
