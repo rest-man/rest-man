@@ -15,6 +15,7 @@ module RestMan
     autoload :DefaultSSLCertStore, 'restman/request/default_ssl_cert_store'
     autoload :LogRequest, 'restman/request/log_request'
     autoload :FetchBodyToTempfile, 'restman/request/fetch_body_to_tempfile'
+    autoload :ProcessResult, 'restman/request/process_result'
 
     include ActiveMethod
     include Init
@@ -161,25 +162,7 @@ module RestMan
     active_method :fetch_body_to_tempfile
 
     # :include: _doc/lib/restman/request/process_result.rdoc
-    def process_result(res, start_time, tempfile=nil, &block)
-      if @raw_response
-        unless tempfile
-          raise ArgumentError.new('tempfile is required')
-        end
-        response = RawResponse.new(tempfile, res, self, start_time)
-      else
-        response = Response.create(res.body, res, self, start_time)
-      end
-
-      response.log_response
-
-      if block_given?
-        block.call(response, self, res, & block)
-      else
-        response.return!(&block)
-      end
-
-    end
+    active_method :process_result
 
     def parser
       URI.const_defined?(:Parser) ? URI::Parser.new : URI
