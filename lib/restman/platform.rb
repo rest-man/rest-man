@@ -7,13 +7,6 @@ module RestMan
       RUBY_PLATFORM.include?('darwin')
     end
 
-    # :include: _doc/lib/restman/platform/windows?.rdoc
-    def self.windows?
-      # Ruby only sets File::ALT_SEPARATOR on Windows, and the Ruby standard
-      # library uses that to test what platform it's on.
-      !!File::ALT_SEPARATOR
-    end
-
     # :include: _doc/lib/restman/platform/jruby?.rdoc
     def self.jruby?
       # defined on mri >= 1.9

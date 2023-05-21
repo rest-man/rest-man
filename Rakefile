@@ -61,64 +61,6 @@ alias_task(:test, :spec)
 
 ############################
 
-WindowsPlatforms = %w{x86-mingw32 x64-mingw32 x86-mswin32}
-
-namespace :all do
-
-  desc "Build rest-man #{RestMan::VERSION} for all platforms"
-  task :build => ['ruby:build'] + \
-    WindowsPlatforms.map {|p| "windows:#{p}:build"}
-
-  desc "Create tag v#{RestMan::VERSION} and for all platforms build and " \
-    "push rest-man #{RestMan::VERSION} to Rubygems"
-  task :release => ['build', 'ruby:release'] + \
-    WindowsPlatforms.map {|p| "windows:#{p}:push"}
-
-end
-
-namespace :windows do
-  spec_path = File.join(File.dirname(__FILE__), 'rest-man.windows.gemspec')
-
-  WindowsPlatforms.each do |platform|
-    namespace platform do
-      gem_filename = "rest-man-#{RestMan::VERSION}-#{platform}.gem"
-      base = File.dirname(__FILE__)
-      pkg_dir = File.join(base, 'pkg')
-      gem_file_path = File.join(pkg_dir, gem_filename)
-
-      desc "Build #{gem_filename} into the pkg directory"
-      task 'build' do
-        orig_platform = ENV['BUILD_PLATFORM']
-        begin
-          ENV['BUILD_PLATFORM'] = platform
-
-          sh("gem build -V #{spec_path}") do |ok, res|
-            if ok
-              FileUtils.mkdir_p(pkg_dir)
-              FileUtils.mv(File.join(base, gem_filename), pkg_dir)
-              Bundler.ui.confirm("rest-man #{RestMan::VERSION} " \
-                                 "built to pkg/#{gem_filename}")
-            else
-              abort "Command `gem build` failed: #{res}"
-            end
-          end
-
-        ensure
-          ENV['BUILD_PLATFORM'] = orig_platform
-        end
-      end
-
-      desc "Push #{gem_filename} to Rubygems"
-      task 'push' do
-        sh("gem push #{gem_file_path}")
-      end
-    end
-  end
-
-end
-
-############################
-
 require 'rdoc/task'
 
 Rake::RDocTask.new do |t|

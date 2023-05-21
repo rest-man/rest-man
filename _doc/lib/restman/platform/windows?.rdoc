@@ -1,4 +1,0 @@
-:call-seq: 
-  windows? -> boolean
-  
-Return true if we are running on Windows.

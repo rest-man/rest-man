@@ -29,7 +29,6 @@ require File.dirname(__FILE__) + '/restman/payload/base'
 require File.dirname(__FILE__) + '/restman/payload/multipart'
 require File.dirname(__FILE__) + '/restman/payload/streamed'
 require File.dirname(__FILE__) + '/restman/payload/url_encoded'
-require File.dirname(__FILE__) + '/restman/windows'
 
 # :include: _doc/lib/restman.rdoc
 module RestMan

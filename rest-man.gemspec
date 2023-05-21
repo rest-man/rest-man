@@ -32,11 +32,4 @@ Gem::Specification.new do |s|
   s.add_dependency('active_method', '~> 1.3')
 
   s.required_ruby_version = '>= 2.6.0'
-
-  case ENV['BUILD_PLATFORM'] || RUBY_PLATFORM
-  when /(mingw32|mswin32)/
-    # ffi is needed for RestMan::Windows::RootCerts
-    s.add_dependency('ffi', '~> 1.9')
-    s.platform = platform
-  end
 end
