@@ -11,23 +11,11 @@ This is a fork version of [rest-client](https://github.com/rest-client/rest-clie
 
 ## Requirements
 
-MRI Ruby 2.0 and newer are supported. Alternative interpreters compatible with
-2.0+ should work as well.
+Supported Ruby versions
 
-Earlier Ruby versions such as 1.8.7, 1.9.2, and 1.9.3 are no longer supported. These
-versions no longer have any official support, and do not receive security
-updates.
-
-The rest-man gem depends on these other gems for usage at runtime:
-
-* [mime-types](http://rubygems.org/gems/mime-types)
-* [netrc](http://rubygems.org/gems/netrc)
-* [http-accept](https://rubygems.org/gems/http-accept)
-* [http-cookie](https://rubygems.org/gems/http-cookie)
-
-There are also several development dependencies. It's recommended to use
-[bundler](http://bundler.io/) to manage these dependencies for hacking on
-rest-man.
+| 2.6 | 2.7 | 3.0 | 3.1 |
+| ---- | ---- | ---- | ---- |
+| ✅ | ✅ | ✅ | ✅ |
 
 ## Usage: Raw URL
 
@@ -206,7 +194,7 @@ Other `OpenSSL::SSL::SSLError` errors are raised as is.
 
 By default, rest-man will follow HTTP 30x redirection requests.
 
-__New in 2.0:__ `RestMan::Response` exposes a `#history` method that returns
+`RestMan::Response` exposes a `#history` method that returns
 a list of each response received in a redirection chain.
 
 ```ruby
@@ -227,12 +215,6 @@ a list of each response received in a redirection chain.
 #### Manually following redirection
 
 To disable automatic redirection, set `:max_redirects => 0`.
-
-__New in 2.0:__ Prior versions of rest-man would raise
-`RestMan::MaxRedirectsReached`, with no easy way to access the server's
-response. In 2.0, rest-man raises the normal
-`RestMan::ExceptionWithResponse` as it would with any other non-HTTP-20x
-response.
 
 ```ruby
 >> RestMan::Request.execute(method: :get, url: 'http://httpbin.org/redirect/1')
@@ -283,9 +265,9 @@ Response objects have several useful methods. (See the class rdoc for more detai
 - `Response#headers`: A hash of HTTP response headers
 - `Response#raw_headers`: A hash of HTTP response headers as unprocessed arrays
 - `Response#cookies`: A hash of HTTP cookies set by the server
-- `Response#cookie_jar`: <em>New in 1.8</em> An HTTP::CookieJar of cookies
+- `Response#cookie_jar`: An HTTP::CookieJar of cookies
 - `Response#request`: The RestMan::Request object used to make the request
-- `Response#history`: <em>New in 2.0</em> If redirection was followed, a list of prior Response objects
+- `Response#history`: If redirection was followed, a list of prior Response objects
 
 ```ruby
 RestMan.get('http://example.com')
@@ -614,7 +596,7 @@ use whatever proxy the system is configured to use:
   RestMan.proxy = ENV['http_proxy']
 ```
 
-__New in 2.0:__ Specify a per-request proxy by passing the :proxy option to
+Specify a per-request proxy by passing the :proxy option to
 RestMan::Request. This will override any proxies set by environment variable
 or by the global `RestMan.proxy` value.
 
@@ -714,7 +696,7 @@ GET:
   {"outer"=>{"foo"=>"123", "bar"=>"456"}}
 ```
 
-__New in 2.0:__ The new `RestMan::ParamsArray` class allows callers to
+The `RestMan::ParamsArray` class allows callers to
 provide ordering even to structured parameters. This is useful for unusual
 cases where the server treats the order of parameters as significant or you
 want to pass a particular key multiple times.
@@ -784,13 +766,9 @@ response2 = RestMan.post(
 )
 # ...response body
 ```
-### Full cookie jar support (new in 1.8)
+### Full cookie jar support
 
-The original cookie implementation was very naive and ignored most of the
-cookie RFC standards.
-__New in 1.8__:  An HTTP::CookieJar of cookies
-
-Response objects now carry a cookie_jar method that exposes an HTTP::CookieJar
+Response objects carry a cookie_jar method that exposes an HTTP::CookieJar
 of cookies, which supports full standards compliant behavior.
 
 ## SSL/TLS support
