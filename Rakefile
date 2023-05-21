@@ -50,7 +50,7 @@ the following kind souls:
 end
 
 task :default do
-  sh 'rake -T'
+  sh 'rake test'
 end
 
 def alias_task(alias_task, original)
