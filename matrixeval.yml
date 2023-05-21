@@ -24,12 +24,25 @@ matrix:
         container:
           image: ruby:3.0.4
       - key: 3.1
-        default: true
         container:
           image: ruby:3.1.0
+      - key: 3.2
+        default: true
+        container:
+          image: ruby:3.2.2
+      - key: 3.3
+        container:
+          image: ruby:3.3.0-preview1
       - key: jruby-9.3
         container:
           image: hoppergee/jruby:9.3.7-dev
+        env:
+            PATH: "/opt/jruby/bin:/app/bin:/bundle/bin:$PATH"
+            JRUBY_OPTS: "--dev -X-C --debug"
+            JAVA_OPTS: "-client -XX:+TieredCompilation -XX:TieredStopAtLevel=1"
+      - key: jruby-9.4
+        container:
+          image: hoppergee/jruby:9.4.2-dev
         env:
             PATH: "/opt/jruby/bin:/app/bin:/bundle/bin:$PATH"
             JRUBY_OPTS: "--dev -X-C --debug"

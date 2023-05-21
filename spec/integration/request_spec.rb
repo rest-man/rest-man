@@ -62,7 +62,7 @@ describe RestMan::Request do
 
 
     # verify_callback is not works well with VCR
-    # it "executes the verify_callback", focus: true do
+    # it "executes the verify_callback" do
     #   ran_callback = false
     #   request = RestMan::Request.new(
     #     :method => :get,

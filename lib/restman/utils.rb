@@ -9,23 +9,12 @@ module RestMan
       type_header = headers[:content_type]
       return nil unless type_header
 
-      # TODO: remove this hack once we drop support for Ruby 2.0
-      if RUBY_VERSION.start_with?('2.0')
-        _content_type, params = deprecated_cgi_parse_header(type_header)
-
-        if params.include?('charset')
-          return params.fetch('charset').gsub(/(\A["']*)|(["']*\z)/, '')
-        end
-
+      begin
+        _content_type, params = cgi_parse_header(type_header)
+      rescue HTTP::Accept::ParseError
+        return nil
       else
-
-        begin
-          _content_type, params = cgi_parse_header(type_header)
-        rescue HTTP::Accept::ParseError
-          return nil
-        else
-          params['charset']
-        end
+        params['charset']
       end
     end
 
@@ -38,53 +27,6 @@ module RestMan
       end
 
       [types.first.mime_type, types.first.parameters]
-    end
-
-    # :include: _doc/lib/restman/utils/_cgi_parseparam.rdoc
-    def self._cgi_parseparam(s)
-      return enum_for(__method__, s) unless block_given?
-
-      while s[0] == ';'
-        s = s[1..-1]
-        ends = s.index(';')
-        while ends && ends > 0 \
-              && (s[0...ends].count('"') -
-                  s[0...ends].scan('\"').count) % 2 != 0
-          ends = s.index(';', ends + 1)
-        end
-        if ends.nil?
-          ends = s.length
-        end
-        f = s[0...ends]
-        yield f.strip
-        s = s[ends..-1]
-      end
-      nil
-    end
-
-    # :include: _doc/lib/restman/utils/deprecated_cgi_parse_header.rdoc
-    def self.deprecated_cgi_parse_header(line)
-      parts = _cgi_parseparam(';' + line)
-      key = parts.next
-      pdict = {}
-
-      begin
-        while (p = parts.next)
-          i = p.index('=')
-          if i
-            name = p[0...i].strip.downcase
-            value = p[i+1..-1].strip
-            if value.length >= 2 && value[0] == '"' && value[-1] == '"'
-              value = value[1...-1]
-              value = value.gsub('\\\\', '\\').gsub('\\"', '"')
-            end
-            pdict[name] = value
-          end
-        end
-      rescue StopIteration
-      end
-
-      [key, pdict]
     end
 
     # :include: _doc/lib/restman/utils/encode_query_string.rdoc

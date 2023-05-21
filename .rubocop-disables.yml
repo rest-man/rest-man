@@ -8,7 +8,7 @@
 # TODO
 # Offense count: 1
 # Cop supports --auto-correct.
-Lint/StringConversionInInterpolation:
+Lint/RedundantStringCoercion:
   Enabled: false
 
 # Tests only
@@ -17,17 +17,9 @@ Lint/StringConversionInInterpolation:
 Lint/UnusedBlockArgument:
   Enabled: false
 
-Security/Eval:
-  Exclude:
-  - rest-man.windows.gemspec
-
-Lint/HandleExceptions:
+Lint/SuppressedException:
   Exclude:
   - lib/restman/utils.rb
-
-Lint/UselessAccessModifier:
-  Exclude:
-  - lib/restman/windows/root_certs.rb
 
 # Offense count: 4
 # Cop supports --auto-correct.
@@ -45,17 +37,6 @@ Style/AndOr:
 # Cop supports --auto-correct.
 Style/BlockDelimiters:
   Enabled: false
-
-# Offense count: 48
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-Style/BracesAroundHashParameters:
-  Enabled: false
-
-# Offense count: 1
-Naming/ClassAndModuleCamelCase:
-  Exclude:
-    - lib/restman/windows/root_certs.rb
 
 # Offense count: 2
 # Configuration parameters: EnforcedStyle, SupportedStyles.
@@ -184,7 +165,7 @@ Style/HashSyntax:
 Style/IfUnlessModifier:
   Enabled: false
 
-Layout/IndentFirstHashElement:
+Layout/FirstHashElementIndentation:
   Exclude:
     - 'spec/**/*.rb'
 
@@ -364,7 +345,7 @@ Style/UnlessElse:
 # TODO?
 # Offense count: 6
 # Cop supports --auto-correct.
-Style/UnneededPercentQ:
+Style/RedundantPercentQ:
   Enabled: false
 
 # Offense count: 5
@@ -378,9 +359,3 @@ Style/WordArray:
 # Configuration parameters: EnforcedStyle, SupportedStyles.
 Style/BarePercentLiterals:
   Enabled: false
-
-
-Style/RescueStandardError:
-  Exclude:
-    - 'exe/restman'
-    - 'lib/restman/windows/root_certs.rb'

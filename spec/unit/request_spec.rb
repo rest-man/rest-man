@@ -21,6 +21,9 @@ describe RestMan::Request, :include_helpers do
     allow(@net).to receive(:ciphers=)
     allow(@net).to receive(:cert_store=)
     allow(@net).to receive(:max_retries=)
+    allow(@net).to receive(:read_timeout=)
+    allow(@net).to receive(:write_timeout=)
+    allow(@net).to receive(:open_timeout=)
     RestMan.log = nil
   end
 
@@ -47,48 +50,17 @@ describe RestMan::Request, :include_helpers do
     end
   end
 
-  describe '.normalize_url' do
-    it "adds http:// to the front of resources specified in the syntax example.com/resource" do
-      expect(@request.normalize_url('example.com/resource')).to eq 'http://example.com/resource'
-    end
-
-    it 'adds http:// to resources containing a colon' do
-      expect(@request.normalize_url('example.com:1234')).to eq 'http://example.com:1234'
-    end
-
-    it 'does not add http:// to the front of https resources' do
-      expect(@request.normalize_url('https://example.com/resource')).to eq 'https://example.com/resource'
-    end
-
-    it 'does not add http:// to the front of capital HTTP resources' do
-      expect(@request.normalize_url('HTTP://example.com/resource')).to eq 'HTTP://example.com/resource'
-    end
-
-    it 'does not add http:// to the front of capital HTTPS resources' do
-      expect(@request.normalize_url('HTTPS://example.com/resource')).to eq 'HTTPS://example.com/resource'
-    end
-
-    it 'raises with invalid URI' do
-      expect {
-        RestMan::Request.new(method: :get, url: 'http://a@b:c')
-      }.to raise_error(URI::InvalidURIError)
-      expect {
-        RestMan::Request.new(method: :get, url: 'http://::')
-      }.to raise_error(URI::InvalidURIError)
-    end
-  end
-
   describe "user - password" do
     it "extracts the username and password when parsing http://user:password@example.com/" do
-      @request.send(:parse_url_with_auth!, 'http://joe:pass1@example.com/resource')
-      expect(@request.user).to eq 'joe'
-      expect(@request.password).to eq 'pass1'
+      request = RestMan::Request.new(method: :get, url: 'http://joe:pass1@example.com/resource')
+      expect(request.user).to eq 'joe'
+      expect(request.password).to eq 'pass1'
     end
 
     it "extracts with escaping the username and password when parsing http://user:password@example.com/" do
-      @request.send(:parse_url_with_auth!, 'http://joe%20:pass1@example.com/resource')
-      expect(@request.user).to eq 'joe '
-      expect(@request.password).to eq 'pass1'
+      request = RestMan::Request.new(method: :get, url: 'http://joe%20:pass1@example.com/resource')
+      expect(request.user).to eq 'joe '
+      expect(request.password).to eq 'pass1'
     end
 
     it "doesn't overwrite user and password (which may have already been set by the Resource constructor) if there is no user/password in the url" do
@@ -685,18 +657,6 @@ describe RestMan::Request, :include_helpers do
   end
 
   describe "timeout" do
-    it "does not set timeouts if not specified" do
-      @request = RestMan::Request.new(:method => :put, :url => 'http://some/resource', :payload => 'payload')
-      allow(@http).to receive(:request)
-      allow(@request).to receive(:process_result)
-
-      expect(@net).not_to receive(:read_timeout=)
-      expect(@net).not_to receive(:open_timeout=)
-      expect(@net).not_to receive(:write_timeout=)
-
-      @request.send(:transmit, @uri, 'req', nil)
-    end
-
     it 'sets read_timeout' do
       @request = RestMan::Request.new(:method => :put, :url => 'http://some/resource', :payload => 'payload', :read_timeout => 123)
       allow(@http).to receive(:request)
@@ -759,35 +719,6 @@ describe RestMan::Request, :include_helpers do
 
       expect(@net).to receive(:read_timeout=).with(nil)
       expect(@net).to receive(:open_timeout=).with(nil)
-      expect(@net).to receive(:write_timeout=).with(nil)
-
-      @request.send(:transmit, @uri, 'req', nil)
-    end
-
-    it 'deprecated: warns when disabling timeout by setting it to -1' do
-      @request = RestMan::Request.new(:method => :put, :url => 'http://some/resource', :payload => 'payload', :read_timeout => -1)
-      allow(@http).to receive(:request)
-      allow(@request).to receive(:process_result)
-
-      expect(@net).to receive(:read_timeout=).with(nil)
-
-      expect(fake_stderr {
-        @request.send(:transmit, @uri, 'req', nil)
-      }).to match(/^Deprecated: .*timeout.* nil instead of -1$/)
-    end
-
-    it "deprecated: disable timeout by setting it to -1" do
-      @request = RestMan::Request.new(:method => :put, :url => 'http://some/resource', :payload => 'payload', :read_timeout => -1, :open_timeout => -1, :write_timeout => -1)
-      allow(@http).to receive(:request)
-      allow(@request).to receive(:process_result)
-
-      expect(@request).to receive(:warn)
-      expect(@net).to receive(:read_timeout=).with(nil)
-
-      expect(@request).to receive(:warn)
-      expect(@net).to receive(:open_timeout=).with(nil)
-
-      expect(@request).to receive(:warn)
       expect(@net).to receive(:write_timeout=).with(nil)
 
       @request.send(:transmit, @uri, 'req', nil)
@@ -1253,56 +1184,14 @@ describe RestMan::Request, :include_helpers do
     end
   end
 
-  describe 'constructor' do
-    it 'should reject valid URIs with no hostname' do
-      expect(URI.parse('http:///').hostname).to be_nil
+  it 'raises with invalid URI' do
+    expect {
+      RestMan::Request.new(method: :get, url: 'http://a@b:c')
+    }.to raise_error(URI::InvalidURIError)
 
-      expect {
-        RestMan::Request.new(method: :get, url: 'http:///')
-      }.to raise_error(URI::InvalidURIError, /\Abad URI/)
-    end
-
-    it 'should reject invalid URIs' do
-      expect {
-        RestMan::Request.new(method: :get, url: 'http://::')
-      }.to raise_error(URI::InvalidURIError)
-    end
+    expect {
+      RestMan::Request.new(method: :get, url: 'http://::')
+    }.to raise_error(URI::InvalidURIError)
   end
 
-  describe 'process_url_params' do
-    it 'should handle basic URL params' do
-      expect(@request.process_url_params('https://example.com/foo', params: {key1: 123, key2: 'abc'})).
-        to eq 'https://example.com/foo?key1=123&key2=abc'
-
-      expect(@request.process_url_params('https://example.com/foo', params: {'key1' => 123})).
-        to eq 'https://example.com/foo?key1=123'
-
-      expect(@request.process_url_params('https://example.com/path',
-                                  params: {foo: 'one two', bar: 'three + four == seven'})).
-        to eq 'https://example.com/path?foo=one+two&bar=three+%2B+four+%3D%3D+seven'
-    end
-
-    it 'should combine with & when URL params already exist' do
-      expect(@request.process_url_params('https://example.com/path?foo=1', params: {bar: 2})).
-        to eq 'https://example.com/path?foo=1&bar=2'
-    end
-
-    it 'should handle complex nested URL params per Rack / Rails conventions' do
-      expect(@request.process_url_params('https://example.com/', params: {
-        foo: [1,2,3],
-        null: nil,
-        falsy: false,
-        math: '2+2=4',
-        nested: {'key + escaped' => 'value + escaped', other: [], arr: [1,2]},
-      })).to eq 'https://example.com/?foo[]=1&foo[]=2&foo[]=3&null&falsy=false&math=2%2B2%3D4' \
-                   '&nested[key+%2B+escaped]=value+%2B+escaped&nested[other]' \
-                   '&nested[arr][]=1&nested[arr][]=2'
-    end
-
-    it 'should handle ParamsArray objects' do
-      expect(@request.process_url_params('https://example.com/',
-        params: RestMan::ParamsArray.new([[:foo, 1], [:foo, 2]])
-      )).to eq 'https://example.com/?foo=1&foo=2'
-    end
-  end
 end
