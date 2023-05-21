@@ -13,9 +13,15 @@ This is a fork version of [rest-client](https://github.com/rest-client/rest-clie
 
 Supported Ruby versions
 
-| 2.6 | 2.7 | 3.0 | 3.1 |
-| ---- | ---- | ---- | ---- |
-| ✅ | ✅ | ✅ | ✅ |
+| 2.6 | 2.7 | 3.0 | 3.1 | 3.2 | 3.3-Preview |
+| ---- | ---- | ---- | ---- | ---- | ---- |
+| ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+
+Supported JRuby versions
+
+| 9.3 | 9.4 |
+| ---- | ---- |
+| ✅ | ✅ |
 
 ## Usage: Raw URL
 

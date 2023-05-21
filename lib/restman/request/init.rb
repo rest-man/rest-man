@@ -30,7 +30,7 @@ module RestMan
       def uri(url)
         uri = URI.parse(url)
 
-        if uri.hostname.nil?
+        if uri.hostname.nil? || uri.hostname == ''
           raise URI::InvalidURIError.new("bad URI(no host provided): #{url}")
         end
 
