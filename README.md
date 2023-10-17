@@ -47,6 +47,8 @@ The RestMan wiki has moved to [RubyGems.Guide](https://rubygems.guide/)
 
 [https://rubygems.guide/rest-man](https://rubygems.guide/rest-man)
 
+[![](./wiki.png)](https://rubygems.guide/rest-man)
+
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/rest-man/rest-man. This project is intended to be a safe, welcoming space for collaboration.
