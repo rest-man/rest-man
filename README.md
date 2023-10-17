@@ -45,7 +45,7 @@ $ gem install rest-man
 
 The RestMan wiki has moved to [RubyGems.Guide](https://rubygems.guide/)
 
-[rubygems.guide/rest-man](https://rubygems.guide/rest-man)
+[RubyGems.Guide/rest-man](https://rubygems.guide/rest-man)
 
 [![](./wiki.png)](https://rubygems.guide/rest-man)
 
